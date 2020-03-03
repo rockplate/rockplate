@@ -51,7 +51,7 @@ describe('Builder', () => {
       expect(builder.blocks.length).toBe(1);
       const block = builder.blocks[0];
       expect(block.type).toBe('literal');
-      expect(block.content).toBe('this [-- should be [if myself is pro broken');
+      expect(block.content).toBe('this [-- should be [if myself is pro');
     }
   });
   it('is broken2', () => {
