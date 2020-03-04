@@ -19,7 +19,7 @@
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:umd": "webpack --env=production",
     "watch": "webpack --env=development",
-    "test": "jest",
+    "test": "jest --coverage",
     "test:watch": "jest --watch --coverage",
     "test:prod": "npm run lint && npm run test -- --coverage --no-cache"
   },
