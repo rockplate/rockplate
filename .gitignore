@@ -1,6 +1,7 @@
 # compiled output
 dist
 types
+docs/api
 
 # dependencies
 node_modules
