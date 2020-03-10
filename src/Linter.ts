@@ -1,22 +1,7 @@
 import { Block, LiteralBlock, IfBlock, RepeatBlock, CommentBlock, BlockType } from './block/index';
 import { Builder } from './Builder';
 import { Utils } from './Utils';
-// import { Parser } from './Parser';
 
-// interface LintResult {
-//   // offset?: number;
-//   startIndex: number;
-//   finishIndex: number;
-//   lineBegin: number;
-//   columnBegin: number;
-//   lineEnd: number;
-//   columnEnd: number;
-//   type: 'error' | 'warning';
-//   expression: string;
-//   message: string;
-// }
-
-// type Range = [number, number];
 type Range = {
   start: number;
   finish: number;
@@ -174,7 +159,7 @@ export class Linter {
       // }
       finishIndex = startIndex + identifier.length;
 
-      const identifiers = schema ? this.builder.getIdentifiers(schema) : false;
+      const identifiers = this.strict && schema ? this.builder.getIdentifiers(schema) : false;
 
       if (keyFound && subkeyFound) {
         if (identifiers && identifiers.indexOf(identifier) === -1) {
@@ -237,13 +222,12 @@ export class Linter {
   }
 
   private scanBlocks(blocks: Block[], schema: any, params: any, results: LintResult[], outerOffset: number) {
-    const strict = this.strict;
     let startIndex;
     let finishIndex;
     for (const block of blocks) {
       if (block instanceof IfBlock) {
         if (!(params[block.key] && typeof params[block.key][block.subkey] === 'boolean')) {
-          if (strict && schema[block.key] && typeof schema[block.key][block.subkey] === 'boolean') {
+          if (this.strict && schema[block.key] && typeof schema[block.key][block.subkey] === 'boolean') {
             const keyFound = params[block.key] && typeof params[block.key] === 'object';
             startIndex =
               outerOffset +
@@ -299,7 +283,7 @@ export class Linter {
               }),
             );
           }
-        } else if (strict && !(schema[block.key] && typeof schema[block.key][block.subkey] === 'boolean')) {
+        } else if (this.strict && !(schema[block.key] && typeof schema[block.key][block.subkey] === 'boolean')) {
           startIndex = outerOffset + this.getBlockPrefix('if').length;
           finishIndex = outerOffset + block.expression.length - 1;
           results.push(
@@ -325,7 +309,7 @@ export class Linter {
         continue;
       } else if (block instanceof RepeatBlock) {
         if (!Array.isArray(params[block.key])) {
-          if (strict && Array.isArray(schema[block.key])) {
+          if (this.strict && Array.isArray(schema[block.key])) {
             startIndex = outerOffset + this.getBlockPrefix('repeat').length;
             finishIndex = outerOffset + block.expression.length - 1;
             results.push(
@@ -354,7 +338,7 @@ export class Linter {
               }),
             );
           }
-        } else if (strict && !Array.isArray(schema[block.key])) {
+        } else if (this.strict && !Array.isArray(schema[block.key])) {
           startIndex = outerOffset + this.getBlockPrefix('repeat').length;
           finishIndex = outerOffset + block.expression.length - 1;
           results.push(
