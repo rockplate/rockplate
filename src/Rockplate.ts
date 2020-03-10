@@ -6,8 +6,8 @@ export class Rockplate {
   public builder: Builder;
   public parser: Parser;
 
-  public constructor(template: string, schema: any) {
-    this.builder = new Builder(template, schema);
+  public constructor(template: string, schema: any, strict?: boolean) {
+    this.builder = new Builder(template, schema, strict);
     this.parser = new Parser(this.builder);
   }
 

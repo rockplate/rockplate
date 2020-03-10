@@ -38,7 +38,7 @@ export class Linter {
   private lines: string[] = [];
   // public parser: Parser;
 
-  public constructor(public template: string, public schema?: any) {
+  public constructor(public template: string, public schema?: any, private strictOverride?: boolean) {
     this.builder = new Builder(template);
     // if (schema) {
     //   this.strictBuilder = new Builder(template, schema);
@@ -47,6 +47,9 @@ export class Linter {
   }
 
   public get strict() {
+    if (this.strictOverride !== undefined) {
+      return this.strictOverride;
+    }
     return !!this.schema;
   }
 
@@ -234,7 +237,7 @@ export class Linter {
   }
 
   private scanBlocks(blocks: Block[], schema: any, params: any, results: LintResult[], outerOffset: number) {
-    const strict = !!schema;
+    const strict = this.strict;
     let startIndex;
     let finishIndex;
     for (const block of blocks) {

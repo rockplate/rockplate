@@ -3,8 +3,8 @@ import { Utils } from '../src/Utils';
 import { schema } from './shared';
 import { BlockType } from '../src/block';
 
-const getLinters = (tpl: string, sch: any) => {
-  return [new Linter(tpl, sch), new Linter(tpl)];
+const getLinters = (tpl: string, sch: any, strict?: boolean) => {
+  return [new Linter(tpl, sch, strict), new Linter(tpl)];
 };
 
 describe('Linter', () => {
@@ -74,11 +74,15 @@ describe('Linter', () => {
     }
   });
   it('lints invalid property', () => {
-    for (const linter of getLinters('Linting [should work] and [should be] fun [-- with a comment too --].', {
-      should: {
-        be: 'fun',
+    for (const linter of getLinters(
+      'Linting [should work] and [should be] fun [-- with a comment too --].',
+      {
+        should: {
+          be: 'fun',
+        },
       },
-    })) {
+      true,
+    )) {
       const results = linter.lint({
         should: {
           be: 'fun',

@@ -103,7 +103,7 @@ Thanks
 My Brand
 `.replace(/\{\-\-.+?\-\-\}/gs, '');
 
-export const getBuilders = (tpl: string, sch: any) => {
+export const getBuilders = (tpl: string, sch: any, strict?: boolean) => {
   // return [new Builder(tpl, sch), new Builder(tpl, sch)];
-  return [new Builder(tpl, sch), new Builder(tpl)];
+  return [new Builder(tpl, sch, strict), new Builder(tpl)];
 };

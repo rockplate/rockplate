@@ -18,9 +18,12 @@ export interface BlockDefinition {
 export class Builder {
   private builtBlocks?: Block[];
 
-  public constructor(public template: string, public schema: any = null) {}
+  public constructor(public template: string, public schema: any = null, private strictOverride?: boolean) {}
 
   public get strict() {
+    if (this.strictOverride !== undefined) {
+      return this.strictOverride;
+    }
     return !!this.schema;
   }
 

@@ -47,7 +47,7 @@ describe('Builder', () => {
         pro: true,
       },
     };
-    for (const builder of getBuilders(tpl, sch)) {
+    for (const builder of getBuilders(tpl, sch, true)) {
       expect(builder.blocks.length).toBe(1);
       const block = builder.blocks[0];
       expect(block.type).toBe('literal');
