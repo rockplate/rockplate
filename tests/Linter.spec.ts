@@ -3,17 +3,23 @@ import { Utils } from '../src/Utils';
 import { schema } from './shared';
 import { BlockType } from '../src/block';
 
-const getLinters = (tpl: string, sch: any, strict?: boolean) => {
-  return [new Linter(tpl, sch, strict), new Linter(tpl)];
+const getLinters = (tpl: string, sch: any, testStrictOverride?: boolean) => {
+  return [new Linter(tpl, sch), new Linter(tpl)].concat(
+    testStrictOverride ? [new Linter(tpl, sch, true), new Linter(tpl, sch, false)] : [],
+  );
 };
 
 describe('Linter', () => {
   it('lints simple identifiers', () => {
-    for (const linter of getLinters('Linting [should be] fun and [should work] fine for simple expression', {
-      should: {
-        work: 'SHOULD WORK',
+    for (const linter of getLinters(
+      'Linting [should be] fun and [should work] fine for simple expression',
+      {
+        should: {
+          work: 'SHOULD WORK',
+        },
       },
-    })) {
+      true,
+    )) {
       let results = linter.lint({
         should: {
           be: 'something',
@@ -74,15 +80,11 @@ describe('Linter', () => {
     }
   });
   it('lints invalid property', () => {
-    for (const linter of getLinters(
-      'Linting [should work] and [should be] fun [-- with a comment too --].',
-      {
-        should: {
-          be: 'fun',
-        },
+    for (const linter of getLinters('Linting [should work] and [should be] fun [-- with a comment too --].', {
+      should: {
+        be: 'fun',
       },
-      true,
-    )) {
+    })) {
       const results = linter.lint({
         should: {
           be: 'fun',

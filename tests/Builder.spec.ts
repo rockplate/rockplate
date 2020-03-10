@@ -76,9 +76,11 @@ describe('Builder', () => {
       },
       ignored: 'yes',
     };
-    for (const builder of getBuilders(tpl, sch)) {
+    let i = 0;
+    for (const builder of getBuilders(tpl, sch, true)) {
+      i++;
       if (builder.strict) {
-        it('ignores unavailable props strict', () => {
+        it('ignores unavailable props strict ' + i, () => {
           expect(builder.blocks.length).toBe(1);
           const block = builder.blocks[0];
           expect(block.type).toBe('literal');
