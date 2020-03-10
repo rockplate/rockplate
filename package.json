@@ -1,6 +1,6 @@
 {
   "name": "rockplate",
-  "version": "1.0.0-pre.1",
+  "version": "1.0.0-pre.2",
   "description": "Templating language for sensible humans",
   "main": "dist/umd/rockplate.min.js",
   "module": "dist/esm/index.js",
