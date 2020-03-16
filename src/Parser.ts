@@ -2,12 +2,12 @@ import { Block, IfBlock, CommentBlock, LiteralBlock } from './block/index';
 import { Utils } from './Utils';
 import { Builder } from './Builder';
 
-export class Parser {
-  public builder: Builder;
-  public constructor(builder: Builder) {
+export class Parser<T = any> {
+  public builder: Builder<T>;
+  public constructor(builder: Builder<T>) {
     this.builder = builder;
   }
-  public parse(params: any) {
+  public parse(params: T) {
     const parsed = this.getBlocksParsed(this.builder.blocks, params);
     return parsed;
   }

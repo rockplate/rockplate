@@ -17,13 +17,13 @@ export interface LintResult {
   message: string;
 }
 
-export class Linter {
-  public builder: Builder;
+export class Linter<T = any> {
+  public builder: Builder<T>;
   // public strictBuilder?: Builder;
   private lines: string[] = [];
   // public parser: Parser;
 
-  public constructor(public template: string, public schema?: any, private strictOverride?: boolean) {
+  public constructor(public template: string, public schema?: T, private strictOverride?: boolean) {
     this.builder = new Builder(template);
     // if (schema) {
     //   this.strictBuilder = new Builder(template, schema);
@@ -385,7 +385,7 @@ export class Linter {
     return res;
   }
 
-  public lint(params: any) {
+  public lint(params: T) {
     const results: LintResult[] = [];
     // const blocks = this.builder.blocks;
     // const lines = this.getLines(this.builder.template);

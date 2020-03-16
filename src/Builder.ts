@@ -15,10 +15,10 @@ export interface BlockDefinition {
   subkey?: string;
 }
 
-export class Builder {
+export class Builder<T> {
   private builtBlocks?: Block[];
 
-  public constructor(public template: string, public schema: any = null, private strictOverride?: boolean) {}
+  public constructor(public template: string, public schema?: T, private strictOverride?: boolean) {}
 
   public get strict() {
     if (this.strictOverride !== undefined) {

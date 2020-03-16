@@ -103,9 +103,9 @@ Thanks
 My Brand
 `.replace(/\{\-\-.+?\-\-\}/gs, '');
 
-export const getBuilders = (tpl: string, sch: any, testStrictOverride?: boolean) => {
+export const getBuilders = <T = any>(tpl: string, sch: T, testStrictOverride?: boolean): Builder<T>[] => {
   // return [new Builder(tpl, sch), new Builder(tpl, sch)];
-  return [new Builder(tpl, sch), new Builder(tpl)].concat(
-    testStrictOverride ? [new Builder(tpl, sch, true), new Builder(tpl, sch, false)] : [],
+  return [new Builder<T>(tpl, sch), new Builder<T>(tpl)].concat(
+    testStrictOverride ? [new Builder<T>(tpl, sch, true), new Builder(tpl, sch, false)] : [],
   );
 };

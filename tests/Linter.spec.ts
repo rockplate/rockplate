@@ -3,8 +3,10 @@ import { Utils } from '../src/Utils';
 import { schema } from './shared';
 import { BlockType } from '../src/block';
 
-const getLinters = (tpl: string, sch: any, testStrictOverride?: boolean) => {
-  return [new Linter(tpl, sch), new Linter(tpl)].concat(
+type RandomParams = any;
+
+const getLinters = <T = any>(tpl: string, sch: T, testStrictOverride?: boolean): Linter<T>[] => {
+  return [new Linter<T>(tpl, sch), new Linter(tpl)].concat(
     testStrictOverride ? [new Linter(tpl, sch, true), new Linter(tpl, sch, false)] : [],
   );
 };
@@ -25,13 +27,13 @@ describe('Linter', () => {
           be: 'something',
           work: 'YES',
         },
-      });
+      } as RandomParams);
       expect(results.length).toBe(linter.strict ? 1 : 0);
       if (linter.strict) {
         //
       }
 
-      results = linter.lint({});
+      results = linter.lint({} as RandomParams);
       //   console.log('all results', results);
       expect(results.length).toBe(linter.strict ? 2 : 2);
       for (let i = 0; i < 2; i++) {
@@ -65,7 +67,7 @@ describe('Linter', () => {
       //       },
       //     }).length,
       //   ).toBe(0);
-      const results = linter.lint({});
+      const results = linter.lint({} as RandomParams);
       expect(results.length).toBe(1);
       const res = results[0];
       expect(res.blockType).toBe('literal');
@@ -117,7 +119,7 @@ describe('Linter', () => {
           },
         }).length,
       ).toBe(0);
-      const results = linter.lint({});
+      const results = linter.lint({} as RandomParams);
       expect(results.length).toBe(1);
       const res = results[0];
       expect(res.blockType).toBe('if');
@@ -142,7 +144,7 @@ describe('Linter', () => {
     };
     for (const linter of getLinters('Vegetables are good. [repeat vegetables][vegetable name][end repeat].', sch)) {
       expect(linter.lint(sch).length).toBe(0);
-      const results = linter.lint({});
+      const results = linter.lint({} as RandomParams);
       //   console.log('the res: ', results);
       expect(results.length).toBe(2);
       const res = results[0];

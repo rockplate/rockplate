@@ -3,6 +3,8 @@ import { Builder } from '../src/Builder';
 import { template, schema, parsed, getBuilders } from './shared';
 import { IfBlock } from '../src/block/IfBlock';
 
+type RandomParams = any;
+
 describe('Parser', () => {
   (() => {
     const tpl = 'I am [if myself is stupid]stupid [myself name][else]ok[end if].';
@@ -25,7 +27,7 @@ describe('Parser', () => {
                 name: 'Plastic',
               },
               ignored: 'yes',
-            }),
+            } as RandomParams),
           ).toBe('I am [if myself is stupid]stupid [myself name][else]ok[end if].');
         });
         continue;
@@ -40,7 +42,7 @@ describe('Parser', () => {
               name: 'Plastic',
             },
             ignored: 'yes',
-          }),
+          } as RandomParams),
         ).toBe('I am stupid Plastic.');
       });
     }
@@ -79,7 +81,7 @@ describe('Parser', () => {
         expect(
           parser.parse({
             myself: {},
-          }),
+          } as RandomParams),
         ).toBe(tpl);
       });
     }
@@ -102,7 +104,7 @@ describe('Parser', () => {
             another: 'ignored',
           },
           something: 'ignored',
-        }),
+        } as RandomParams),
       ).toBe('Hey, I am a pro! Yes!!');
       expect(
         parser.parse({
@@ -111,7 +113,7 @@ describe('Parser', () => {
             another: 'ignored',
           },
           something: 'ignored',
-        }),
+        } as RandomParams),
       ).toBe('Hey!!');
     }
   });

@@ -2,11 +2,11 @@ import { Block, IfBlock } from './block/index';
 import { Builder } from './Builder';
 import { Parser } from './Parser';
 
-export class Rockplate {
-  public builder: Builder;
+export class Rockplate<T = any> {
+  public builder: Builder<T>;
   public parser: Parser;
 
-  public constructor(template: string, schema: any, strict?: boolean) {
+  public constructor(template: string, schema: T, strict?: boolean) {
     this.builder = new Builder(template, schema, strict);
     this.parser = new Parser(this.builder);
   }
@@ -15,7 +15,7 @@ export class Rockplate {
   //   return this.builder.build();
   // }
 
-  public parse(params: any) {
+  public parse(params: T) {
     return this.parser.parse(params);
   }
 

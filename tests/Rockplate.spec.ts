@@ -13,9 +13,9 @@ describe('parser', () => {
   it('validates template', () => {
     expect(rockplate.validateTemplate()).toBe(true);
   });
-  // it('parses complex template & schema', () => {
-  //   expect(rockplate.parse(schema)).toBe(parsed);
-  // });
+  it('parses complex template & schema', () => {
+    expect(rockplate.parse(schema)).toBe(parsed);
+  });
   it('parses simple variables', () => {
     expect(
       getRockplateParsed('My name is [my name]', {
