@@ -148,44 +148,85 @@ describe('Builder', () => {
   });
 
   (() => {
-    const expectBlock = (builder: Builder<typeof schema>, index: number, blockType: BlockType) => {
-      const block = builder.getBlockAt(index);
-      expect(block).toBeDefined();
-      if (block === undefined) {
-        return;
-      }
-      expect(block.type).toBe(blockType);
-    };
     for (const builder of getBuilders(template, schema)) {
+      const expectBlockAt = (idx: number, blockType: BlockType, scopeTest?: any) => {
+        const block = builder.getBlockAt(idx);
+        expect(block).toBeDefined();
+        if (block === undefined) {
+          return;
+        }
+        expect(block.type).toBe(blockType);
+        if (!scopeTest) {
+          return;
+        }
+        if (!builder.strict || block.type === 'comment') {
+          expect(block.scope).toBeUndefined();
+          return;
+        }
+        expect(block.scope).toBeDefined();
+        for (const prop in scopeTest) {
+          if (!scopeTest.hasOwnProperty(prop)) {
+            continue;
+          }
+          expect(block.scope[prop] !== undefined).toBe(scopeTest[prop]);
+        }
+      };
       let index: number;
 
+      const rootScope = {
+        // ailable:
+        brand: true,
+        customer: true,
+        items: true,
+        order: true,
+        // unavailable:
+        something: false,
+        item: false,
+        discount: false,
+      };
+
+      const repeatScope: typeof rootScope = {
+        // ailable in root:
+        brand: true,
+        customer: true,
+        items: true,
+        order: true,
+        // unavailable:
+        something: false,
+        // ailable within items array:
+        item: true,
+        discount: true,
+      };
+
+      // const repeatScope = rootScope;
+
       it('gets literal block at index' + (builder.strict ? ' (STRICT)' : ''), () => {
-        expectBlock(builder, template.indexOf('Total: '), 'literal'); // in root
+        expectBlockAt(template.indexOf('Total: '), 'literal', rootScope); // in root
 
-        expectBlock(builder, template.indexOf('[item name]'), 'literal'); // within repeat
+        expectBlockAt(template.indexOf('[item name]'), 'literal', repeatScope); // within repeat
 
-        expectBlock(builder, template.indexOf('(Discount: '), 'literal'); // within if
+        expectBlockAt(template.indexOf('(Discount: '), 'literal', repeatScope); // within if
 
-        expectBlock(builder, template.indexOf('(No Discount)'), 'literal'); // within else
+        expectBlockAt(template.indexOf('(No Discount)'), 'literal', repeatScope); // within else
       });
 
       it('gets comment block at index' + (builder.strict ? ' (STRICT)' : ''), () => {
         index = template.indexOf('this is a comment');
-        expectBlock(builder, index, 'comment');
+        expectBlockAt(index, 'comment');
       });
 
       it('gets repeat block at index' + (builder.strict ? ' (STRICT)' : ''), () => {
         index = template.indexOf('[repeat items]');
-        expectBlock(builder, index + 4, 'repeat'); // at the word "repeat"
-        expectBlock(builder, index + 11, 'repeat'); // at the word "items"
+        expectBlockAt(index + 4, 'repeat', rootScope); // at the word "repeat"
+        expectBlockAt(index + 11, 'repeat', rootScope); // at the word "items"
       });
 
       it('gets if block at index' + (builder.strict ? ' (STRICT)' : ''), () => {
         index = template.indexOf('[if discount is available]');
-        expectBlock(builder, index + 2, 'if'); // at the word "if"
-        expectBlock(builder, index + 8, 'if'); // at the word "discount"
-        expectBlock(builder, index + 14, 'if'); // at the word "is"
-        expectBlock(builder, index + 21, 'if'); // at the word "available"
+        expectBlockAt(index + 2, 'if', repeatScope); // at the word "if"
+        expectBlockAt(index + 8, 'if', repeatScope); // at the word "discount"
+        expectBlockAt(index + 14, 'if', repeatScope); // at the word "is"
+        expectBlockAt(index + 21, 'if', repeatScope); // at the word "available"
       });
     }
   })();
