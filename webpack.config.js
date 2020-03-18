@@ -17,6 +17,7 @@ const createConfig = (options) => {
       filename: 'rockplate' + (options.mode === 'production' ? '.min' : '') + '.js',
       library: 'rockplate',
       libraryTarget: 'umd',
+      globalObject: "typeof self !== 'undefined' ? self : this",
     },
     module: {
       rules: [
