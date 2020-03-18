@@ -1,6 +1,7 @@
 import { Builder } from '../src/Builder';
 import { template, schema, parsed, getBuilders } from './shared';
 import { IfBlock } from '../src/block/IfBlock';
+import { BlockType, Block } from '../src/block';
 
 describe('Builder', () => {
   // const builder = new Builder(template);
@@ -120,7 +121,7 @@ describe('Builder', () => {
       // expect(block.content).toBe('this should be [if myself is pro] broken');
     }
   });
-  it('builds', () => {
+  it('builds complex template', () => {
     // const builder = new Builder(template, schema);
     for (const builder of getBuilders(template, schema)) {
       expect(builder.blocks.length).toBe(5);
@@ -145,4 +146,47 @@ describe('Builder', () => {
       // expect(builder.blocks[1].children[3].type).toBe('if');
     }
   });
+
+  (() => {
+    const expectBlock = (builder: Builder<typeof schema>, index: number, blockType: BlockType) => {
+      const block = builder.getBlockAt(index);
+      expect(block).toBeDefined();
+      if (block === undefined) {
+        return;
+      }
+      expect(block.type).toBe(blockType);
+    };
+    for (const builder of getBuilders(template, schema)) {
+      let index: number;
+
+      it('gets literal block at index' + (builder.strict ? ' (STRICT)' : ''), () => {
+        expectBlock(builder, template.indexOf('Total: '), 'literal'); // in root
+
+        expectBlock(builder, template.indexOf('[item name]'), 'literal'); // within repeat
+
+        expectBlock(builder, template.indexOf('(Discount: '), 'literal'); // within if
+
+        expectBlock(builder, template.indexOf('(No Discount)'), 'literal'); // within else
+      });
+
+      it('gets comment block at index' + (builder.strict ? ' (STRICT)' : ''), () => {
+        index = template.indexOf('this is a comment');
+        expectBlock(builder, index, 'comment');
+      });
+
+      it('gets repeat block at index' + (builder.strict ? ' (STRICT)' : ''), () => {
+        index = template.indexOf('[repeat items]');
+        expectBlock(builder, index + 4, 'repeat'); // at the word "repeat"
+        expectBlock(builder, index + 11, 'repeat'); // at the word "items"
+      });
+
+      it('gets if block at index' + (builder.strict ? ' (STRICT)' : ''), () => {
+        index = template.indexOf('[if discount is available]');
+        expectBlock(builder, index + 2, 'if'); // at the word "if"
+        expectBlock(builder, index + 8, 'if'); // at the word "discount"
+        expectBlock(builder, index + 14, 'if'); // at the word "is"
+        expectBlock(builder, index + 21, 'if'); // at the word "available"
+      });
+    }
+  })();
 });

@@ -4,6 +4,8 @@ import {
   /* IfBlock, CommentBlock, RepeatBlock, LiteralBlock, */ createBlock,
   IfBlock,
   LiteralBlock,
+  RepeatBlock,
+  CommentBlock,
 } from './block/index';
 import { Utils } from './Utils';
 
@@ -40,6 +42,7 @@ export class Builder<T> {
 
   public build() {
     const outerBlocks = this.findOuterBlocks(this.template, this.schema);
+    this.repairOffsets(outerBlocks);
     this.builtBlocks = outerBlocks;
     return outerBlocks;
   }
@@ -127,7 +130,12 @@ export class Builder<T> {
   }
 
   protected getBlockPrefix(blockType: BlockType) {
-    const prefixes = { comment: '[--', if: '[if ', repeat: '[repeat ', literal: '' };
+    const prefixes = {
+      comment: '[--',
+      if: '[if ',
+      repeat: '[repeat ',
+      literal: '',
+    };
     return prefixes[blockType];
   }
 
@@ -284,20 +292,31 @@ export class Builder<T> {
     const nextBlock = this.findFirstBlock(tpl, schema);
     if (nextBlock) {
       nextBlock.outerBeginIndex += block.outerEndIndex;
-      nextBlock.innerBeginIndex += block.outerEndIndex;
-      nextBlock.innerEndIndex += block.outerEndIndex;
+      // nextBlock.innerBeginIndex += block.outerEndIndex;
+      // nextBlock.innerEndIndex += block.outerEndIndex;
       nextBlock.outerEndIndex += block.outerEndIndex;
     }
     return nextBlock;
   }
 
   public getIdentifiers(schema: any) {
-    const identifiers = [];
+    return this.getVariables(schema)
+      .filter((varialbe) => varialbe.type !== 'array')
+      .map((variable) => variable.key + ' ' + variable.subkey);
+  }
+
+  public getVariables(schema: any) {
+    const variables: {
+      key: string;
+      type: 'identifier' | 'boolean' | 'array';
+      subkey: string;
+    }[] = [];
     for (const key in schema) {
       if (!schema.hasOwnProperty(key)) {
         continue;
       }
       if (Array.isArray(schema[key])) {
+        variables.push({ key, subkey: '', type: 'array' });
         continue;
       }
       if (typeof schema[key] !== 'object') {
@@ -307,24 +326,43 @@ export class Builder<T> {
         if (!schema[key].hasOwnProperty(subkey)) {
           continue;
         }
-        identifiers.push(key + ' ' + subkey);
+        if (typeof schema[key][subkey] === 'boolean') {
+          variables.push({ key, subkey, type: 'boolean' });
+        } else {
+          variables.push({ key, subkey, type: 'identifier' });
+        }
       }
     }
-    return identifiers;
+    return variables;
   }
 
   private getLiteralBlock(tpl: string, schema: any, prevBlock?: Block, nextBlock?: Block): Block {
     const block = createBlock('literal', {
       outerBeginIndex: prevBlock ? prevBlock.outerEndIndex : 0,
-      innerBeginIndex: prevBlock ? prevBlock.outerEndIndex : 0,
-
-      innerEndIndex: nextBlock ? nextBlock.outerBeginIndex : tpl.length,
+      // innerBeginIndex: prevBlock ? prevBlock.outerEndIndex : 0,
+      // innerEndIndex: nextBlock ? nextBlock.outerBeginIndex : tpl.length,
       outerEndIndex: nextBlock ? nextBlock.outerBeginIndex : tpl.length,
     }) as LiteralBlock;
     block.content = tpl.substring(block.outerBeginIndex, block.outerEndIndex);
     block.outerContent = block.content;
     if (this.strict) {
-      block.identifiers = this.getIdentifiers(schema);
+      block.identifiers = [];
+      block.booleans = [];
+      block.arrays = [];
+      for (const variable of this.getVariables(schema)) {
+        if (variable.type === 'array') {
+          block.arrays.push(variable.key);
+          continue;
+        }
+        if (variable.type === 'boolean') {
+          block.booleans.push({
+            key: variable.key,
+            subkey: variable.subkey,
+          });
+        }
+        block.identifiers.push(variable.key + ' ' + variable.subkey); // booleans are valid identifiers
+      }
+      // block.identifiers = this.getVariables(schema);
     }
     return block;
   }
@@ -413,8 +451,8 @@ export class Builder<T> {
     // idxEnd = offset + idxEnd;
     const block = createBlock(blockType, {
       outerBeginIndex: idx,
-      innerBeginIndex: idx + expression.length,
-      innerEndIndex: idxEnd,
+      // innerBeginIndex: idx + expression.length,
+      // innerEndIndex: idxEnd,
       outerEndIndex: idxEnd + end.length,
       expression,
       expressionEnd: end,
@@ -422,7 +460,7 @@ export class Builder<T> {
       subkey,
       operator,
     });
-    block.content = tpl.substring(block.innerBeginIndex, block.innerEndIndex);
+    block.content = tpl.substring(idx + expression.length, idxEnd);
     block.outerContent = tpl.substring(block.outerBeginIndex, block.outerEndIndex);
     return block;
   }
@@ -447,5 +485,62 @@ export class Builder<T> {
       subkey,
       operator,
     );
+  }
+
+  private advanceOffset(block: LiteralBlock | CommentBlock, offset: number) {
+    return offset + block.outerContent.length;
+  }
+
+  private repairOffsets(blocks: Block[], outerOffset = 0) {
+    for (const block of blocks) {
+      block.outerBeginIndex = outerOffset;
+      if (block instanceof IfBlock) {
+        outerOffset = outerOffset + block.expression.length;
+        outerOffset = this.repairOffsets(block.children, outerOffset);
+        if (block.elseChildren.length) {
+          outerOffset = outerOffset + '[else]'.length;
+          outerOffset = this.repairOffsets(block.elseChildren, outerOffset);
+        }
+        outerOffset = outerOffset + block.expressionEnd.length;
+        // continue;
+      } else if (block instanceof RepeatBlock) {
+        outerOffset = outerOffset + block.expression.length;
+        outerOffset = this.repairOffsets(block.children, outerOffset);
+        outerOffset = outerOffset + block.expressionEnd.length;
+        // continue;
+      } else if (block instanceof LiteralBlock) {
+        outerOffset = this.advanceOffset(block, outerOffset);
+        // continue;
+      } else {
+        outerOffset = this.advanceOffset(block, outerOffset);
+        // continue;
+      }
+      block.outerEndIndex = outerOffset;
+    }
+    return outerOffset;
+  }
+
+  private getBlockAtIndex(blocks: Block[], index: number): Block | undefined {
+    let foundBlock: Block | undefined;
+    for (const block of blocks) {
+      if (!(index >= block.outerBeginIndex && index <= block.outerEndIndex)) {
+        continue;
+      }
+      if (block instanceof IfBlock) {
+        foundBlock = this.getBlockAtIndex(block.children.concat(block.elseChildren), index);
+      } else if (block instanceof RepeatBlock) {
+        foundBlock = this.getBlockAtIndex(block.children, index);
+      } else {
+        return block;
+      }
+      if (!foundBlock) {
+        foundBlock = block;
+      }
+    }
+    return foundBlock;
+  }
+
+  public getBlockAt(index: number): Block | undefined {
+    return this.getBlockAtIndex(this.blocks, index);
   }
 }
