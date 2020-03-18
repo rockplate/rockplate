@@ -299,10 +299,20 @@ export class Builder<T> {
     return nextBlock;
   }
 
+  public isValidIdentifier(identifiers: { key: string; subkey: string }[], identifier: string) {
+    // return identifiers.indexOf(identifier) !== -1;
+    return identifiers.map((idf) => idf.key + ' ' + idf.subkey).indexOf(identifier) !== -1;
+  }
+
   public getIdentifiers(schema: any) {
-    return this.getVariables(schema)
-      .filter((varialbe) => varialbe.type !== 'array')
-      .map((variable) => variable.key + ' ' + variable.subkey);
+    return (
+      this.getVariables(schema)
+        .filter((varialbe) => varialbe.type !== 'array')
+        //  .map((variable) => variable.key + ' ' + variable.subkey);
+        .map((variable) => {
+          return { key: variable.key, subkey: variable.subkey };
+        })
+    );
   }
 
   public getVariables(schema: any) {
@@ -360,10 +370,15 @@ export class Builder<T> {
             subkey: variable.subkey,
           });
         }
-        block.identifiers.push(variable.key + ' ' + variable.subkey); // booleans are valid identifiers
+        block.identifiers.push({
+          key: variable.key,
+          subkey: variable.subkey,
+        });
+        // block.identifiers.push(variable.key + ' ' + variable.subkey); // booleans are valid identifiers
       }
       // block.identifiers = this.getVariables(schema);
     }
+    block.scope = schema;
     return block;
   }
 
@@ -462,6 +477,7 @@ export class Builder<T> {
     });
     block.content = tpl.substring(idx + expression.length, idxEnd);
     block.outerContent = tpl.substring(block.outerBeginIndex, block.outerEndIndex);
+    block.scope = schema;
     return block;
   }
 

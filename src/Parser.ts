@@ -47,7 +47,7 @@ export class Parser<T = any> {
         if (result.indexOf(expression) === -1) {
           continue;
         }
-        if (this.builder.strict && block.identifiers.indexOf(identifier) === -1) {
+        if (this.builder.strict && !this.builder.isValidIdentifier(block.identifiers, identifier)) {
           continue;
           // return result;
         }

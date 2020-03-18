@@ -30,5 +30,6 @@ export class Block implements BlockParams {
   key: string = '';
   // subkey?: string;
   // operator?: string;
+  scope: any;
   thisIsClass = true;
 }

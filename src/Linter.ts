@@ -160,9 +160,10 @@ export class Linter<T = any> {
       finishIndex = startIndex + identifier.length;
 
       const identifiers = this.strict && schema ? this.builder.getIdentifiers(schema) : false;
+      const isValidIdentifier = identifiers && this.builder.isValidIdentifier(identifiers, identifier);
 
       if (keyFound && subkeyFound) {
-        if (identifiers && identifiers.indexOf(identifier) === -1) {
+        if (identifiers && !isValidIdentifier) {
           results.push(
             this.lintResult({
               type: 'warning',
@@ -177,7 +178,7 @@ export class Linter<T = any> {
         continue;
       }
 
-      if (identifiers && identifiers.indexOf(identifier) !== -1) {
+      if (identifiers && isValidIdentifier) {
         results.push(
           this.lintResult({
             type: 'warning',
