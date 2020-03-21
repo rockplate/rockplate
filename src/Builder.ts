@@ -99,7 +99,7 @@ export class Builder<T> {
       if (ix === -1) {
         return false;
       }
-      endIdx = endIdx + ix + 1;
+      endIdx += ix + 1;
       let json;
       try {
         json = JSON.parse(str.substring(idx, endIdx + 1));

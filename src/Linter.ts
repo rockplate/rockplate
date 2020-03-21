@@ -23,7 +23,7 @@ export class Linter<T = any> {
   private lines: string[] = [];
   // public parser: Parser;
 
-  public constructor(public template: string, public schema?: T, private strictOverride?: boolean) {
+  public constructor(public template: string, schema?: T, private strictOverride?: boolean) {
     this.builder = new Builder(template, schema, false);
     // if (schema) {
     //   this.strictBuilder = new Builder(template, schema);
@@ -31,11 +31,15 @@ export class Linter<T = any> {
     // this.parser = new Parser(this.builder);
   }
 
+  public get schema() {
+    return this.builder.schema;
+  }
+
   public get strict() {
     if (this.strictOverride !== undefined) {
       return this.strictOverride;
     }
-    return !!this.schema;
+    return !!this.builder.schema;
   }
 
   protected getBlockPrefix(blockType: BlockType) {
@@ -386,14 +390,18 @@ export class Linter<T = any> {
     return res;
   }
 
-  public lint(params: T) {
+  public lint(params?: T) {
     const results: LintResult[] = [];
     // const blocks = this.builder.blocks;
     // const lines = this.getLines(this.builder.template);
     // console.log('lines: ', lines);
     // return this.parser.parse(params);
     // this.lines = this.getLines(this.builder.template);
-    this.scanBlocks(this.builder.blocks, this.schema, params, results, 0);
+    const schema = this.schema || {};
+    if (params === undefined) {
+      params = schema as T;
+    }
+    this.scanBlocks(this.builder.blocks, schema, params, results, this.builder.blocks[0].outerBeginIndex);
     for (const res of results) {
       this.findLineAndColumn(res);
     }
