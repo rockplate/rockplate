@@ -81,6 +81,28 @@ describe('Linter', () => {
       expect(res.index.finish).toBe('Linting [should not work fine for wrong expression'.length);
     }
   });
+  it('lints without params', () => {
+    for (const linter of getLinters('Linting [should work] and [should be] fun [-- with a comment too --].', {
+      should: {
+        be: 'fun',
+      },
+    })) {
+      const results = linter.lint();
+      expect(results.length).toBe(linter.strict ? 1 : 2);
+      const res = results[0];
+      expect(res.blockType).toBe('literal');
+      expect(res.expression).toBe('[should work]');
+      if (linter.strict) {
+        expect(res.message).toBe('Unavailable: Property "work" on Object "should"');
+        expect(res.index.start).toBe('Linting [should '.length);
+        expect(res.index.finish).toBe(res.index.start + 'work'.length);
+      } else {
+        expect(res.message).toBe('Unavailable: Identifier "should work"');
+        expect(res.index.start).toBe('Linting ['.length);
+        expect(res.index.finish).toBe(res.index.start + 'should work'.length);
+      }
+    }
+  });
   it('lints invalid property', () => {
     for (const linter of getLinters('Linting [should work] and [should be] fun [-- with a comment too --].', {
       should: {
