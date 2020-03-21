@@ -24,7 +24,7 @@ export class Linter<T = any> {
   // public parser: Parser;
 
   public constructor(public template: string, public schema?: T, private strictOverride?: boolean) {
-    this.builder = new Builder(template);
+    this.builder = new Builder(template, schema, false);
     // if (schema) {
     //   this.strictBuilder = new Builder(template, schema);
     // }

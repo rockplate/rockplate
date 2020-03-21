@@ -230,4 +230,76 @@ describe('Builder', () => {
       });
     }
   })();
+
+  (() => {
+    const sch = {
+      user: {
+        nickname: 'Safraz Razik',
+      },
+    };
+    const tpl = `
+
+
+<<SCHEMA>>
+Dear [user nickname],
+
+Thank you
+[brand name]
+`;
+
+    const literalString = `
+Dear [user nickname],
+
+Thank you
+[brand name]
+`;
+    // for (const builder of getBuilders(tpl, undefined, true)) {
+    const builder1 = new Builder(tpl.replace('<<SCHEMA>>', JSON.stringify(sch, null, 2)));
+    const schUrl = {
+      schema: './hello-my-schema.json',
+    };
+    const builder2 = new Builder(tpl.replace('<<SCHEMA>>', JSON.stringify(schUrl, null, 2)), (schemaUrl) => {
+      // schemaUrl = './hello-my-schema.json'
+      return sch;
+    });
+    const builder3 = new Builder(tpl.replace('<<SCHEMA>>', JSON.stringify(schUrl, null, 2)), (schemaUrl) => {
+      // schemaUrl = './hello-my-schema.json'
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(sch);
+        }, 100);
+      });
+    });
+    const builder4 = new Builder(tpl.replace('<<SCHEMA>>', '{ "user": { "nickname": "Safraz Razik"'));
+    const builder5 = new Builder(tpl.replace('<<SCHEMA>>', JSON.stringify(schUrl, null, 2)), (schemaUrl) => {
+      // schemaUrl = './hello-my-schema.json'
+      return null; // falsy schema = no schema
+    });
+
+    let i = 0;
+    for (const builder of [builder1, builder2, builder3, builder4, builder5]) {
+      i++;
+      it('parses embedded schema ' + i, async () => {
+        await builder.build();
+        // promise.then(() => {
+        expect(builder.blocks.length).toBe(1);
+        const block = builder.blocks[0];
+        if (builder === builder4) {
+          expect(block.content).toBe(tpl.replace('<<SCHEMA>>', '{ "user": { "nickname": "Safraz Razik"'));
+          expect(block.scope).toBeUndefined();
+        } else if (builder === builder5) {
+          expect(block.content).toBe(literalString);
+          expect(block.scope).toBeUndefined();
+        } else {
+          expect(block.content).toBe(literalString);
+          expect(block.scope).toBeDefined();
+          expect(block.scope.brand).toBeUndefined();
+          expect(block.scope.user).toBeDefined();
+          // expect(block.scope.user.nickname).toBe('Safraz Razik');
+        }
+        // });
+        // return promise;
+      });
+    }
+  })();
 });

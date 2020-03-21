@@ -20,7 +20,11 @@ export interface BlockDefinition {
 export class Builder<T> {
   private builtBlocks?: Block[];
 
-  public constructor(public template: string, public schema?: T, private strictOverride?: boolean) {}
+  public constructor(
+    public template: string,
+    public schema?: T | ((path: string) => T | Promise<T>),
+    private strictOverride?: boolean,
+  ) {}
 
   public get strict() {
     if (this.strictOverride !== undefined) {
@@ -34,21 +38,76 @@ export class Builder<T> {
   }
 
   public get blocks(): Block[] {
-    if (this.builtBlocks) {
-      return this.builtBlocks;
+    if (!this.builtBlocks) {
+      this.builtBlocks = [];
+      this.build();
     }
-    return this.build();
+    return this.builtBlocks;
   }
 
   public build() {
-    const outerBlocks = this.findOuterBlocks(this.template, this.schema);
-    this.repairOffsets(outerBlocks);
+    // const schemaBlock = this.findSchemaBlock(this.template);
+    const sch = this.getSchemaFromString(this.template);
+    let offset = 0;
+    if (sch) {
+      offset = sch.offset;
+      const schema = sch.schema;
+      let schemaUrl;
+      const keys = Object.keys(schema);
+      if (keys.length === 1 && keys[0] === 'schema') {
+        schemaUrl = schema.schema;
+      }
+      if (schemaUrl && this.schema instanceof Function) {
+        const schResult = this.schema(schemaUrl);
+        if (schResult && (schResult as Promise<T>).then) {
+          return new Promise<Block[]>((resolve, reject) => {
+            (schResult as Promise<T>).then((schemaFound) => {
+              this.schema = schemaFound;
+              const blocks = this.findOuterBlocks(this.template.substr(offset), this.schema);
+              this.repairOffsets(blocks, offset);
+              this.builtBlocks = blocks;
+              resolve(blocks);
+            });
+          });
+        } else if (schResult) {
+          this.schema = schResult as T;
+        } else {
+          this.schema = undefined;
+        }
+      } else {
+        this.schema = schema;
+      }
+    }
+    const outerBlocks = this.findOuterBlocks(this.template.substr(offset), this.schema);
+    this.repairOffsets(outerBlocks, offset);
     this.builtBlocks = outerBlocks;
-    return outerBlocks;
+    return Promise.resolve(outerBlocks);
   }
 
   private getParamsMergedForBlock(block: Block, params: any, childParams?: any) {
     return Utils.getParamsMergedForBlock(block, params, childParams);
+  }
+
+  private getSchemaFromString(str: string) {
+    const idx = str.indexOf('{');
+    if (idx === -1) {
+      return false;
+    }
+    let endIdx = idx;
+    for (let i = 0; i < 10000; i++) {
+      const ix = str.substr(endIdx + 1).indexOf('}');
+      if (ix === -1) {
+        return false;
+      }
+      endIdx = endIdx + ix + 1;
+      let json;
+      try {
+        json = JSON.parse(str.substring(idx, endIdx + 1));
+        return { schema: json, startIndex: idx, endIndex: endIdx, offset: endIdx + 1 };
+      } catch (e) {
+        /**/
+      }
+    }
   }
 
   private findOuterBlocks(tpl: string, schema: any) {
@@ -507,7 +566,7 @@ export class Builder<T> {
     return offset + block.outerContent.length;
   }
 
-  private repairOffsets(blocks: Block[], outerOffset = 0) {
+  private repairOffsets(blocks: Block[], outerOffset: number) {
     for (const block of blocks) {
       block.outerBeginIndex = outerOffset;
       if (block instanceof IfBlock) {
