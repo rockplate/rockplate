@@ -8,3 +8,127 @@
 # Rockplate
 
 Templating language for sensible humans
+
+## Quick Docs for the curious cats
+
+Full documentation with demo is on the way.
+If you've found this before announcement, you can use it in your project as it is stable.
+
+
+### Installation
+
+`npm install rockplate`
+
+
+### Usage
+
+TypeScript/JavaScript
+
+```javascript
+
+import { Rockplate } from 'rockplate';
+
+const template = 'My name is [my name]';
+const schema = {
+  "my": {
+    "name": "My Name"
+  }
+};
+const rpl = new Rockplate(template, schema);
+const output = rpl.parse({
+  // you will get type hints
+  // for properties in schema as you type
+  my: {
+    name: 'Safraz Razik'
+  }
+});
+console.log(output); // My name is Safraz Razik
+```
+
+### Syntax and Schema/Data structure
+
+> Limitations are good - for a templating language
+
+
+#### Booleans
+
+Values: `true` `false`
+
+```javascript
+{
+  "order" : {
+    "paid": true
+  },
+  "vegeetables": {
+    "fresh": true // example for " are " operator
+  }
+
+}
+```
+
+Syntax: `[if order is paid] .... [end if]`
+
+Operators: ` is ` ` are ` ` is not ` ` are not `
+
+
+```rpl
+[if order is paid]
+  Paid
+[else]
+  Unpaid
+[end if]
+```
+
+```rpl
+I eat
+[if vegetables are fresh]
+  healthy
+[end if]
+vegetables 🥕🥦🍅🍆🥝🥬🥒🌶
+```
+
+
+#### Identifers
+
+Values: `string` `number` or `any` printable value
+
+```javascript
+{
+  "order" : {
+    "ref": "210045-674558-981560"
+  }
+}
+```
+
+Syntax: `[order ref]`
+
+```rpl
+Thank you for your order [order ref]
+```
+
+#### Arrays
+
+Value: Collection of Booleans or Identifers
+
+```javascript
+{
+  "orders" : [
+    {
+      "order" : {
+        "paid": true,
+        "ref": "210045-674558-981560"
+      }
+    }
+  ]
+}
+```
+
+Syntax: `[repeat orders] .... [end repeat]`
+
+```rpl
+Your orders:
+[repeat orders]
+ Ref: [order ref]
+ Status: [if order is paid]Paid[else]Unpaid[end if]
+[end repeat]
+```
