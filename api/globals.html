@@ -2425,7 +2425,7 @@ img {
   <span class="hljs-string">"order"</span> : {
     <span class="hljs-string">"paid"</span>: <span class="hljs-literal">true</span>
   },
-  <span class="hljs-string">"vegeetables"</span>: {
+  <span class="hljs-string">"vegetables"</span>: {
     <span class="hljs-string">"fresh"</span>: <span class="hljs-literal">true</span> <span class="hljs-comment">// example for " are " operator</span>
   }
 
@@ -2461,8 +2461,12 @@ vegetables 🥕🥦🍅🍆🥝🥬🥒🌶</code></pre>
   <span class="hljs-string">"orders"</span> : [
     {
       <span class="hljs-string">"order"</span> : {
-        <span class="hljs-string">"paid"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-string">"status"</span>: <span class="hljs-string">"Paid"</span>,
         <span class="hljs-string">"ref"</span>: <span class="hljs-string">"210045-674558-981560"</span>
+      },
+      <span class="hljs-string">"discount"</span> : {
+        <span class="hljs-string">"available"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-string">"value"</span>: <span class="hljs-string">"5%"</span>
       }
     }
   ]
@@ -2470,8 +2474,15 @@ vegetables 🥕🥦🍅🍆🥝🥬🥒🌶</code></pre>
 			<p>Syntax: <code>[repeat orders] .... [end repeat]</code></p>
 			<pre><code class="language-rpl">Your orders:
 [repeat orders]
+
  Ref: [order ref]
- Status: [if order is paid]Paid[else]Unpaid[end if]
+
+ Status: [order status]
+
+ [if discount is available]
+   Discount: [discount value]
+ [end if]
+
 [end repeat]</code></pre>
 		</div>
 		<section class="tsd-panel-group tsd-index-group">
