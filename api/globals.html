@@ -2432,15 +2432,15 @@ img {
 }</code></pre>
 			<p>Syntax: <code>[if order is paid] .... [end if]</code></p>
 			<p>Operators: <code>is</code> <code>are</code> <code>is not</code> <code>are not</code></p>
-			<pre><code class="language-rpl">[if order is paid]
+			<pre><code class="language-pascal">[<span class="hljs-keyword">if</span> order <span class="hljs-keyword">is</span> paid]
   Paid
-[else]
+[<span class="hljs-keyword">else</span>]
   Unpaid
-[end if]</code></pre>
-			<pre><code class="language-rpl">I eat
-[if vegetables are fresh]
+[<span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>]</code></pre>
+			<pre><code class="language-pascal">I eat
+[<span class="hljs-keyword">if</span> vegetables are fresh]
   healthy
-[end if]
+[<span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>]
 vegetables 🥕🥦🍅🍆🥝🥬🥒🌶</code></pre>
 			<a href="#identifers" id="identifers" style="color: inherit; text-decoration: none;">
 				<h4>Identifers</h4>
@@ -2466,24 +2466,26 @@ vegetables 🥕🥦🍅🍆🥝🥬🥒🌶</code></pre>
       },
       <span class="hljs-string">"discount"</span> : {
         <span class="hljs-string">"available"</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-string">"value"</span>: <span class="hljs-string">"5%"</span>
+        <span class="hljs-string">"amount"</span>: <span class="hljs-string">"5%"</span>
       }
     }
   ]
 }</code></pre>
 			<p>Syntax: <code>[repeat orders] .... [end repeat]</code></p>
-			<pre><code class="language-rpl">Your orders:
-[repeat orders]
+			<pre><code class="language-pascal">Your orders:
+[<span class="hljs-keyword">repeat</span> orders]
 
  Ref: [order ref]
 
  Status: [order status]
 
- [if discount is available]
-   Discount: [discount value]
- [end if]
+ [<span class="hljs-keyword">if</span> discount <span class="hljs-keyword">is</span> available]
+   Discount: [discount amount]
+ [<span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>]
 
-[end repeat]</code></pre>
+[<span class="hljs-keyword">end</span> <span class="hljs-keyword">repeat</span>]</code></pre>
+			<!-- NOTE: pascal has nothing to do with rockplate.
+Keywords of rockplate are keywords of pascal, so it has been used for syntax highlighting -->
 		</div>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
