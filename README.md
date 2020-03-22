@@ -59,7 +59,7 @@ Values: `true` `false`
   "order" : {
     "paid": true
   },
-  "vegeetables": {
+  "vegetables": {
     "fresh": true // example for " are " operator
   }
 
@@ -115,8 +115,12 @@ Value: Collection of Booleans or Identifers
   "orders" : [
     {
       "order" : {
-        "paid": true,
+        "status": "Paid",
         "ref": "210045-674558-981560"
+      },
+      "discount" : {
+        "available": false,
+        "value": "5%"
       }
     }
   ]
@@ -128,7 +132,14 @@ Syntax: `[repeat orders] .... [end repeat]`
 ```rpl
 Your orders:
 [repeat orders]
+
  Ref: [order ref]
- Status: [if order is paid]Paid[else]Unpaid[end if]
+
+ Status: [order status]
+
+ [if discount is available]
+   Discount: [discount value]
+ [end if]
+
 [end repeat]
 ```
