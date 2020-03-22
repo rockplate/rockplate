@@ -71,7 +71,7 @@ Syntax: `[if order is paid] .... [end if]`
 Operators: ` is ` ` are ` ` is not ` ` are not `
 
 
-```rpl
+```pascal
 [if order is paid]
   Paid
 [else]
@@ -79,7 +79,7 @@ Operators: ` is ` ` are ` ` is not ` ` are not `
 [end if]
 ```
 
-```rpl
+```pascal
 I eat
 [if vegetables are fresh]
   healthy
@@ -120,7 +120,7 @@ Value: Collection of Booleans or Identifers
       },
       "discount" : {
         "available": false,
-        "value": "5%"
+        "amount": "5%"
       }
     }
   ]
@@ -129,7 +129,7 @@ Value: Collection of Booleans or Identifers
 
 Syntax: `[repeat orders] .... [end repeat]`
 
-```rpl
+```pascal
 Your orders:
 [repeat orders]
 
@@ -138,8 +138,11 @@ Your orders:
  Status: [order status]
 
  [if discount is available]
-   Discount: [discount value]
+   Discount: [discount amount]
  [end if]
 
 [end repeat]
 ```
+
+<!-- NOTE: pascal has nothing to do with rockplate.
+Keywords of rockplate are keywords of pascal, so it has been used for syntax highlighting -->
