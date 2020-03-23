@@ -218,7 +218,7 @@ Thanks
     const expectLintResult = (
       lint: Lint,
       expected: {
-        type?: string;
+        severity?: 'error' | 'warning';
         offset: { begin: number; end: number };
         line: { begin: number; end: number };
         column: { begin: number; end: number };
@@ -235,6 +235,7 @@ Thanks
       expect(lint.position.begin.column).toBe(expected.column.begin);
       expect(lint.position.end.column).toBe(expected.column.end);
       expect(lint.message).toBe(expected.message);
+      expect(lint.severity).toBe(expected.severity);
     };
     for (const linter of getLinters(tpl, schema)) {
       it('lints complex scenario: ' + (linter.strict ? 'strict' : 'dynamic'), () => {
@@ -254,7 +255,7 @@ Thanks
           offset: { begin: 91, end: 99 },
           line: { begin: 5, end: 5 },
           column: { begin: 8, end: 16 },
-          type: 'error',
+          severity: 'error',
           expression: '[repeat customer]',
           message: 'Unavailable: Array "customer"',
           blockType: 'repeat',
@@ -264,7 +265,7 @@ Thanks
           offset: { begin: 91, end: 99 },
           line: { begin: 1, end: 1 }, // lines won't be resolved
           column: { begin: 0, end: 0 }, // lines won't be resolved
-          type: 'error',
+          severity: 'error',
           expression: '[repeat customer]',
           message: 'Unavailable: Array "customer"',
           blockType: 'repeat',
@@ -276,7 +277,7 @@ Thanks
             offset: { begin: 122, end: 129 },
             line: { begin: 7, end: 7 },
             column: { begin: 8, end: 15 },
-            type: 'warning',
+            severity: 'warning',
             expression: '[repeat options]',
             message: '(STRICT) Illegal: Array "options"',
             blockType: 'repeat',
@@ -288,7 +289,7 @@ Thanks
           offset: { begin: 246, end: 252 },
           line: { begin: 15, end: 15 },
           column: { begin: 27, end: 33 },
-          type: 'error',
+          severity: 'error',
           expression: '[discount amount]',
           message: 'Unavailable: Property "amount" on Object "discount"',
           blockType: 'literal',
@@ -300,7 +301,7 @@ Thanks
           offset: { begin: 277, end: 280 },
           line: { begin: 16, end: 16 },
           column: { begin: 22, end: 25 },
-          type: 'error',
+          severity: 'error',
           expression: '[if customer is vip]',
           message: 'Unavailable: Boolean "vip"',
           blockType: 'if',
@@ -312,7 +313,7 @@ Thanks
           offset: { begin: 304, end: 316 },
           line: { begin: 17, end: 17 },
           column: { begin: 22, end: 34 },
-          type: 'error',
+          severity: 'error',
           expression: '[vip customer]',
           message: 'Unavailable: Identifier "vip customer"',
           blockType: 'literal',
@@ -324,7 +325,7 @@ Thanks
           offset: { begin: 362, end: 386 },
           line: { begin: 19, end: 19 },
           column: { begin: 31, end: 55 },
-          type: 'error',
+          severity: 'error',
           expression: '[if something is unavailable]',
           message: 'Unavailable: Object "something" and Boolean "unavailable"',
           blockType: 'if',
@@ -337,7 +338,7 @@ Thanks
             offset: { begin: 506, end: 523 },
             line: { begin: 28, end: 28 },
             column: { begin: 25, end: 42 },
-            type: 'warning',
+            severity: 'warning',
             expression: '[if coupon is applied]',
             message: '(STRICT) Illegal: Condition "coupon is applied"',
             blockType: 'if',
@@ -349,7 +350,7 @@ Thanks
           offset: { begin: 560, end: 564 },
           line: { begin: 29, end: 29 },
           column: { begin: 13, end: 17 },
-          type: linter.strict ? 'warning' : 'error',
+          severity: linter.strict ? 'warning' : 'error',
           expression: '[if order is paid]',
           message: (linter.strict ? '(STRICT) ' : '') + 'Unavailable: Boolean "paid"',
           blockType: 'if',
@@ -362,7 +363,7 @@ Thanks
             offset: { begin: 587, end: 600 },
             line: { begin: 32, end: 32 },
             column: { begin: 1, end: 14 },
-            type: 'warning',
+            severity: 'warning',
             expression: '[business name]',
             message: '(STRICT) Illegal: Identifier "business name"',
             blockType: 'literal',

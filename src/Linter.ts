@@ -12,12 +12,12 @@ type Position = {
   end: { line: number; column: number };
 };
 
-type LintResultType = 'error' | 'warning';
+export type LintSeverity = 'error' | 'warning';
 
 export interface Lint {
   offset: Range;
   position: Position;
-  type: LintResultType;
+  severity: LintSeverity;
   blockType: BlockType;
   block: Block;
   scope: any;
@@ -69,7 +69,7 @@ export class Linter<T = any> {
   private createLintResult(res: {
     offsetBegin: number;
     offsetEnd: number;
-    type: LintResultType;
+    severity: LintSeverity;
     block: Block;
     expression: string;
     message: string;
@@ -79,7 +79,7 @@ export class Linter<T = any> {
       // line: { begin: 1, end: 1 },
       // column: { begin: 0, end: 0 },
       position: { begin: { line: 1, column: 0 }, end: { line: 1, column: 0 } },
-      type: res.type,
+      severity: res.severity,
       expression: res.expression,
       message: res.message,
       blockType: res.block.type,
@@ -98,7 +98,7 @@ export class Linter<T = any> {
     let expression: string;
     const getLintResult = (message: string, strict = false): Lint => {
       return this.createLintResult({
-        type: strict ? 'warning' : 'error',
+        severity: strict ? 'warning' : 'error',
         block,
         offsetBegin,
         offsetEnd,
@@ -177,7 +177,7 @@ export class Linter<T = any> {
     for (const block of blocks) {
       const getLintResult = (message: string, strict = false): Lint => {
         return this.createLintResult({
-          type: strict ? 'warning' : 'error',
+          severity: strict ? 'warning' : 'error',
           block,
           offsetBegin,
           offsetEnd,
@@ -282,10 +282,10 @@ export class Linter<T = any> {
     let hasErrors = false;
     let hasWarnings = false;
     lints.map((lint) => {
-      if (lint.type === 'error') {
+      if (lint.severity === 'error') {
         hasErrors = true;
       }
-      if (lint.type === 'warning') {
+      if (lint.severity === 'warning') {
         hasWarnings = true;
       }
       if (resolveLines) {
