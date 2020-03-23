@@ -34,7 +34,6 @@ describe('Linter', () => {
       }
 
       results = linter.lint({} as RandomParams);
-      //   console.log('all results', results);
       expect(results.length).toBe(linter.strict ? 2 : 2);
       for (let i = 0; i < 2; i++) {
         const res = results[i];
@@ -60,23 +59,12 @@ describe('Linter', () => {
         work: 'SHOULD WORK',
       },
     })) {
-      //   expect(
-      //     linter.lint({
-      //       should: {
-      //         work: 'YES',
-      //       },
-      //     }).length,
-      //   ).toBe(0);
       const results = linter.lint({} as RandomParams);
       expect(results.length).toBe(1);
       const res = results[0];
       expect(res.blockType).toBe('literal');
       expect(res.expression).toBe('[should no...');
-      expect(res.message).toBe(
-        // (linter.strict ? '(STRICT) ' : '') + 'Unavailable: Identifier "should work"',
-        'Invalid: Expression "[should no..."',
-        //   : 'Unavailable identifier "should work"',
-      );
+      expect(res.message).toBe('Invalid: Expression "[should no..."');
       expect(res.index.start).toBe('Linting ['.length);
       expect(res.index.finish).toBe('Linting [should not work fine for wrong expression'.length);
     }
@@ -118,12 +106,7 @@ describe('Linter', () => {
       const res = results[0];
       expect(res.blockType).toBe('literal');
       expect(res.expression).toBe('[should work]');
-      expect(res.message).toBe(
-        'Unavailable: Property "work" on Object "should"',
-        // (linter.strict ? '(STRICT) ' : '') + 'Unavailable: Identifier "should work"',
-        // 'Invalid: Expression "[should no..."',
-        //   : 'Unavailable identifier "should work"',
-      );
+      expect(res.message).toBe('Unavailable: Property "work" on Object "should"');
       expect(res.index.start).toBe('Linting [should '.length);
       expect(res.index.finish).toBe(res.index.start + 'work'.length);
     }
@@ -167,7 +150,6 @@ describe('Linter', () => {
     for (const linter of getLinters('Vegetables are good. [repeat vegetables][vegetable name][end repeat].', sch)) {
       expect(linter.lint(sch).length).toBe(0);
       const results = linter.lint({} as RandomParams);
-      //   console.log('the res: ', results);
       expect(results.length).toBe(2);
       const res = results[0];
       expect(res.blockType).toBe('repeat');
@@ -179,7 +161,6 @@ describe('Linter', () => {
       const res1 = results[1];
       expect(res1.blockType).toBe('literal');
       expect(res1.expression).toBe('[vegetable name]');
-      //   expect(res1.message).toBe((linter.strict ? '(STRICT) ' : '') + 'Unavailable: Array "vegetables"');
       expect(res1.message).toBe((linter.strict ? '(STRICT) ' : '') + 'Unavailable: Identifier "vegetable name"');
       expect(res1.index.start).toBe('Vegetables are good. [repeat vegetables]['.length);
       expect(res1.index.finish).toBe(res1.index.start + 'vegetable name'.length);

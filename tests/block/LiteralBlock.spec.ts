@@ -3,8 +3,6 @@ import { Parser } from '../../src/Parser';
 import { LiteralBlock } from '../../src/block/LiteralBlock';
 import { getBuilders } from '../shared';
 
-// import { template, schema, parsed } from './shared';
-
 const sch = {
   my: {
     name: 'My Name',

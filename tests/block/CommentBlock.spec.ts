@@ -4,8 +4,6 @@ import { CommentBlock } from '../../src/block/CommentBlock';
 import { LiteralBlock } from '../../src/block/LiteralBlock';
 import { getBuilders } from '../shared';
 
-// import { template, schema, parsed } from './shared';
-
 const sch = {
   my: {
     name: 'My Name',

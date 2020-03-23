@@ -121,12 +121,10 @@ describe('Parser', () => {
     const builder = new Builder(template, schema);
     const parser = new Parser(builder);
     expect(parser.parse(schema)).toBe(parsed);
-    // expect(2 + 5).toBe(7);
   });
   it('parses complex template', () => {
     const builder = new Builder(template);
     const parser = new Parser(builder);
     expect(parser.parse(schema)).toBe(parsed);
-    // expect(2 + 5).toBe(7);
   });
 });

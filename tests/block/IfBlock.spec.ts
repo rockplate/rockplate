@@ -4,8 +4,6 @@ import { LiteralBlock } from '../../src/block/LiteralBlock';
 import { IfBlock } from '../../src/block/IfBlock';
 import { getBuilders } from '../shared';
 
-// import { template, schema, parsed } from './shared';
-
 const sch = {
   my: {
     name: 'My Name',
@@ -42,7 +40,6 @@ const ifSuite = (
   elseInnerText?: string,
 ) => {
   describe(title, () => {
-    // const builder = new Builder(tpl, sch);
     for (const builder of getBuilders(tpl, sch)) {
       it('is built ' + builder.type, () => {
         expect(builder.blocks.length).toBe(3);

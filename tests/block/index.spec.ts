@@ -1,7 +1,6 @@
 import { createBlock } from '../../src/block/index';
 import { CommentBlock } from '../../src/block/CommentBlock';
 import { LiteralBlock } from '../../src/block/LiteralBlock';
-// import { getBuilders } from '../shared';
 
 describe('index', () => {
   it('creates Block with params', () => {

@@ -4,13 +4,11 @@ import { IfBlock } from '../src/block/IfBlock';
 import { BlockType, Block } from '../src/block';
 
 describe('Builder', () => {
-  // const builder = new Builder(template);
   it('is getValidBlockDefinition literal', () => {
     const sch = { some: { name: 'My Name' } };
     const tpl = 'hello [some one] world';
     for (const builder of getBuilders(tpl, sch)) {
       const blkDef = builder.getValidBlockDefinition(6, 'literal', tpl, sch);
-      // console.log('blkDef', blkDef);
       expect(blkDef).toBeUndefined();
     }
   });
@@ -19,7 +17,6 @@ describe('Builder', () => {
     const tpl = 'hello [if some is one]one[end if] world';
     for (const builder of getBuilders(tpl, sch)) {
       const blkDef = builder.getValidBlockDefinition(6, 'if', tpl, sch);
-      // console.log('blkDef', blkDef);
       expect(blkDef).toBeDefined();
       if (blkDef) {
         expect(blkDef.key).toBe('some');
@@ -33,11 +30,9 @@ describe('Builder', () => {
     const tpl = 'hello [repeat things]thing[end repeat] world';
     for (const builder of getBuilders(tpl, sch)) {
       const blkDef = builder.getValidBlockDefinition(6, 'repeat', tpl, sch);
-      // console.log('blkDef', blkDef);
       expect(blkDef).toBeDefined();
       if (blkDef) {
         expect(blkDef.key).toBe('things');
-        // expect(blkDef.subkey).toBe('one');
       }
     }
   });
@@ -116,20 +111,15 @@ describe('Builder', () => {
       expect(builder.blocks[2].content).toBe('!');
       expect(builder.blocks[3].children[0].content).toBe(' Yes!');
       expect(builder.blocks[4].content).toBe('!');
-      // const block = builder.blocks[0];
-      // expect(block.type).toBe('literal');
-      // expect(block.content).toBe('this should be [if myself is pro] broken');
     }
   });
   it('builds complex template', () => {
-    // const builder = new Builder(template, schema);
     for (const builder of getBuilders(template, schema)) {
       expect(builder.blocks.length).toBe(5);
       expect(builder.blocks[0].type).toBe('literal');
       expect(builder.blocks[1].type).toBe('comment');
       const repeatBlock = builder.blocks[3];
       expect(repeatBlock.type).toBe('repeat');
-      // expect(builder.blocks[2].type).toBe('literal');
       expect(repeatBlock.children.length).toBe(3);
       expect(repeatBlock.children[0].content.trim()).toBe('[item name]: [item price]');
 
@@ -140,10 +130,6 @@ describe('Builder', () => {
       expect(ifBlock.children[2].content.trim()).toBe('(Discount: [discount value])');
       expect(ifBlock.elseChildren.length).toBe(1);
       expect(ifBlock.elseChildren[0].content.trim()).toBe('(No Discount)');
-      // const innerIf = builder.blocks[1].children[1];
-      // expect(innerIf.type).toBe('if');
-      // expect(innerIf.children.length).toBe(3);
-      // expect(builder.blocks[1].children[3].type).toBe('if');
     }
   });
 
@@ -193,12 +179,10 @@ describe('Builder', () => {
         order: true,
         // unavailable:
         something: false,
-        // ailable within items array:
+        // avilable within items array:
         item: true,
         discount: true,
       };
-
-      // const repeatScope = rootScope;
 
       it('gets literal block at index' + (builder.strict ? ' (STRICT)' : ''), () => {
         expectBlockAt(template.indexOf('Total: '), 'literal', rootScope); // in root
@@ -253,7 +237,7 @@ Dear [user nickname],
 Thank you
 [brand name]
 `;
-    // for (const builder of getBuilders(tpl, undefined, true)) {
+
     const builder1 = new Builder(tpl.replace('<<SCHEMA>>', JSON.stringify(sch, null, 2)));
     const schUrl = {
       schema: './hello-my-schema.json',
@@ -281,7 +265,6 @@ Thank you
       i++;
       it('parses embedded schema ' + i, async () => {
         await builder.build();
-        // promise.then(() => {
         expect(builder.blocks.length).toBe(1);
         const block = builder.blocks[0];
         if (builder === builder4) {
@@ -295,10 +278,7 @@ Thank you
           expect(block.scope).toBeDefined();
           expect(block.scope.brand).toBeUndefined();
           expect(block.scope.user).toBeDefined();
-          // expect(block.scope.user.nickname).toBe('Safraz Razik');
         }
-        // });
-        // return promise;
       });
     }
   })();

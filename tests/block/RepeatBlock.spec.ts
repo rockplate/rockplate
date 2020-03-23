@@ -4,8 +4,6 @@ import { LiteralBlock } from '../../src/block/LiteralBlock';
 import { RepeatBlock } from '../../src/block/RepeatBlock';
 import { getBuilders } from '../shared';
 
-// import { template, schema, parsed } from './shared';
-
 const sch = {
   my: {
     name: 'My Name',
@@ -53,7 +51,6 @@ describe('RepeatBlock', () => {
       expect(block.content).toBe('My interests: [repeat interests]unavailable[end repeat].');
     });
     it('is built ' + builder.type, () => {
-      // console.log(builder.blocks);
       expect(builder.blocks.length).toBe(3);
       expect(builder.blocks[0]).toBeInstanceOf(LiteralBlock);
       expect(builder.blocks[2]).toBeInstanceOf(LiteralBlock);
