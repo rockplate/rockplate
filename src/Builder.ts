@@ -142,7 +142,7 @@ export class Builder<T> {
     const outerBlocks: Block[] = [];
     let nextBlock = this.findFirstBlock(tpl, schema);
     outerBlocks.push(this.getLiteralBlock(tpl, schema, undefined, nextBlock));
-    const maxIterations = 1000;
+    const maxIterations = 10000;
     for (let i = 0; i < maxIterations; i++) {
       if (!nextBlock) {
         break;
@@ -403,7 +403,7 @@ export class Builder<T> {
         idxEnd = offset + idxEnd;
       }
     } else {
-      const maxIterations = 1000;
+      const maxIterations = 10000;
       let nextIdx;
       let nextEndIdx;
       let level = 0;

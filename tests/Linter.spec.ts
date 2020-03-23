@@ -1,4 +1,4 @@
-import { Linter, LintResult } from '../src/Linter';
+import { Linter, Lint, LinterResult } from '../src/Linter';
 import { Utils } from '../src/Utils';
 import { schema } from './shared';
 import { BlockType } from '../src/block';
@@ -22,21 +22,21 @@ describe('Linter', () => {
       },
       true,
     )) {
-      let results = linter.lint({
+      let result = linter.lint({
         should: {
           be: 'something',
           work: 'YES',
         },
       } as RandomParams);
-      expect(results.length).toBe(linter.strict ? 1 : 0);
+      expect(result.lints.length).toBe(linter.strict ? 1 : 0);
       if (linter.strict) {
         //
       }
 
-      results = linter.lint({} as RandomParams);
-      expect(results.length).toBe(linter.strict ? 2 : 2);
+      result = linter.lint({} as RandomParams);
+      expect(result.lints.length).toBe(linter.strict ? 2 : 2);
       for (let i = 0; i < 2; i++) {
-        const res = results[i];
+        const res = result.lints[i];
         const identifier = ['should be', 'should work'][i];
         expect(res.blockType).toBe('literal');
         expect(res.expression).toBe('[' + identifier + ']');
@@ -46,10 +46,10 @@ describe('Linter', () => {
             identifier +
             '"',
         );
-        expect(res.index.start).toBe(
+        expect(res.offset.begin).toBe(
           (identifier === 'should work' ? 'Linting [should be] fun and [' : 'Linting [').length,
         );
-        expect(res.index.finish).toBe(res.index.start + identifier.length);
+        expect(res.offset.end).toBe(res.offset.begin + identifier.length);
       }
     }
   });
@@ -59,14 +59,14 @@ describe('Linter', () => {
         work: 'SHOULD WORK',
       },
     })) {
-      const results = linter.lint({} as RandomParams);
-      expect(results.length).toBe(1);
-      const res = results[0];
+      const result = linter.lint({} as RandomParams);
+      expect(result.lints.length).toBe(1);
+      const res = result.lints[0];
       expect(res.blockType).toBe('literal');
       expect(res.expression).toBe('[should no...');
       expect(res.message).toBe('Invalid: Expression "[should no..."');
-      expect(res.index.start).toBe('Linting ['.length);
-      expect(res.index.finish).toBe('Linting [should not work fine for wrong expression'.length);
+      expect(res.offset.begin).toBe('Linting ['.length);
+      expect(res.offset.end).toBe('Linting [should not work fine for wrong expression'.length);
     }
   });
   it('lints without params', () => {
@@ -75,19 +75,19 @@ describe('Linter', () => {
         be: 'fun',
       },
     })) {
-      const results = linter.lint();
-      expect(results.length).toBe(linter.strict ? 1 : 2);
-      const res = results[0];
+      const result = linter.lint();
+      expect(result.lints.length).toBe(linter.strict ? 1 : 2);
+      const res = result.lints[0];
       expect(res.blockType).toBe('literal');
       expect(res.expression).toBe('[should work]');
       if (linter.strict) {
         expect(res.message).toBe('Unavailable: Property "work" on Object "should"');
-        expect(res.index.start).toBe('Linting [should '.length);
-        expect(res.index.finish).toBe(res.index.start + 'work'.length);
+        expect(res.offset.begin).toBe('Linting [should '.length);
+        expect(res.offset.end).toBe(res.offset.begin + 'work'.length);
       } else {
         expect(res.message).toBe('Unavailable: Identifier "should work"');
-        expect(res.index.start).toBe('Linting ['.length);
-        expect(res.index.finish).toBe(res.index.start + 'should work'.length);
+        expect(res.offset.begin).toBe('Linting ['.length);
+        expect(res.offset.end).toBe(res.offset.begin + 'should work'.length);
       }
     }
   });
@@ -97,18 +97,18 @@ describe('Linter', () => {
         be: 'fun',
       },
     })) {
-      const results = linter.lint({
+      const result = linter.lint({
         should: {
           be: 'fun',
         },
       });
-      expect(results.length).toBe(1);
-      const res = results[0];
+      expect(result.lints.length).toBe(1);
+      const res = result.lints[0];
       expect(res.blockType).toBe('literal');
       expect(res.expression).toBe('[should work]');
       expect(res.message).toBe('Unavailable: Property "work" on Object "should"');
-      expect(res.index.start).toBe('Linting [should '.length);
-      expect(res.index.finish).toBe(res.index.start + 'work'.length);
+      expect(res.offset.begin).toBe('Linting [should '.length);
+      expect(res.offset.end).toBe(res.offset.begin + 'work'.length);
     }
   });
   it('lints if condition', () => {
@@ -122,18 +122,18 @@ describe('Linter', () => {
           vegetables: {
             fresh: true,
           },
-        }).length,
+        }).lints.length,
       ).toBe(0);
-      const results = linter.lint({} as RandomParams);
-      expect(results.length).toBe(1);
-      const res = results[0];
+      const result = linter.lint({} as RandomParams);
+      expect(result.lints.length).toBe(1);
+      const res = result.lints[0];
       expect(res.blockType).toBe('if');
       expect(res.expression).toBe('[if vegetables are fresh]');
       expect(res.message).toBe(
         (linter.strict ? '(STRICT) ' : '') + 'Unavailable: Object "vegetables" and Boolean "fresh"',
       );
-      expect(res.index.start).toBe('I eat[if '.length);
-      expect(res.index.finish).toBe(res.index.start + 'vegetables are fresh'.length);
+      expect(res.offset.begin).toBe('I eat[if '.length);
+      expect(res.offset.end).toBe(res.offset.begin + 'vegetables are fresh'.length);
     }
   });
   it('lints repeat array', () => {
@@ -148,22 +148,22 @@ describe('Linter', () => {
       ],
     };
     for (const linter of getLinters('Vegetables are good. [repeat vegetables][vegetable name][end repeat].', sch)) {
-      expect(linter.lint(sch).length).toBe(0);
-      const results = linter.lint({} as RandomParams);
-      expect(results.length).toBe(2);
-      const res = results[0];
+      expect(linter.lint(sch).lints.length).toBe(0);
+      const result = linter.lint({} as RandomParams);
+      expect(result.lints.length).toBe(2);
+      const res = result.lints[0];
       expect(res.blockType).toBe('repeat');
       expect(res.expression).toBe('[repeat vegetables]');
       expect(res.message).toBe((linter.strict ? '(STRICT) ' : '') + 'Unavailable: Array "vegetables"');
-      expect(res.index.start).toBe('Vegetables are good. [repeat '.length);
-      expect(res.index.finish).toBe(res.index.start + 'vegetables'.length);
+      expect(res.offset.begin).toBe('Vegetables are good. [repeat '.length);
+      expect(res.offset.end).toBe(res.offset.begin + 'vegetables'.length);
 
-      const res1 = results[1];
+      const res1 = result.lints[1];
       expect(res1.blockType).toBe('literal');
       expect(res1.expression).toBe('[vegetable name]');
       expect(res1.message).toBe((linter.strict ? '(STRICT) ' : '') + 'Unavailable: Identifier "vegetable name"');
-      expect(res1.index.start).toBe('Vegetables are good. [repeat vegetables]['.length);
-      expect(res1.index.finish).toBe(res1.index.start + 'vegetable name'.length);
+      expect(res1.offset.begin).toBe('Vegetables are good. [repeat vegetables]['.length);
+      expect(res1.offset.end).toBe(res1.offset.begin + 'vegetable name'.length);
     }
   });
   (() => {
@@ -216,44 +216,54 @@ Thanks
     (params as any).order.paid = undefined;
 
     const expectLintResult = (
-      res: LintResult,
+      lint: Lint,
       expected: {
         type?: string;
-        index: { start: number; finish: number };
-        line: { start: number; finish: number };
-        column: { start: number; finish: number };
+        offset: { begin: number; end: number };
+        line: { begin: number; end: number };
+        column: { begin: number; end: number };
         expression: string;
         message: string;
         blockType: BlockType;
       },
     ) => {
-      expect(res.blockType).toBe(expected.blockType);
-      expect(res.index.start).toBe(expected.index.start);
-      expect(res.index.finish).toBe(expected.index.finish);
-      expect(res.line.start).toBe(expected.line.start);
-      expect(res.line.finish).toBe(expected.line.finish);
-      expect(res.column.start).toBe(expected.column.start);
-      expect(res.column.finish).toBe(expected.column.finish);
-      expect(res.message).toBe(expected.message);
+      expect(lint.blockType).toBe(expected.blockType);
+      expect(lint.offset.begin).toBe(expected.offset.begin);
+      expect(lint.offset.end).toBe(expected.offset.end);
+      expect(lint.position.begin.line).toBe(expected.line.begin);
+      expect(lint.position.end.line).toBe(expected.line.end);
+      expect(lint.position.begin.column).toBe(expected.column.begin);
+      expect(lint.position.end.column).toBe(expected.column.end);
+      expect(lint.message).toBe(expected.message);
     };
     for (const linter of getLinters(tpl, schema)) {
       it('lints complex scenario: ' + (linter.strict ? 'strict' : 'dynamic'), () => {
-        const results = linter.lint(params);
-        expect(results.length).toBe(linter.strict ? 9 : 6);
+        const result = linter.lint(params);
+        const resultNoLines = linter.lint(params, false);
+        const lints = result.lints;
+        expect(lints.length).toBe(linter.strict ? 9 : 6);
         if (linter.strict) {
           //   return;
         }
 
         // heavily tested with CodeMirror lint
 
-        // console.log(results);
-
         let index = 0;
 
-        expectLintResult(results[index], {
-          index: { start: 91, finish: 99 },
-          line: { start: 5, finish: 5 },
-          column: { start: 8, finish: 16 },
+        expectLintResult(lints[index], {
+          offset: { begin: 91, end: 99 },
+          line: { begin: 5, end: 5 },
+          column: { begin: 8, end: 16 },
+          type: 'error',
+          expression: '[repeat customer]',
+          message: 'Unavailable: Array "customer"',
+          blockType: 'repeat',
+        });
+
+        expectLintResult(resultNoLines.lints[index], {
+          offset: { begin: 91, end: 99 },
+          line: { begin: 1, end: 1 }, // lines won't be resolved
+          column: { begin: 0, end: 0 }, // lines won't be resolved
           type: 'error',
           expression: '[repeat customer]',
           message: 'Unavailable: Array "customer"',
@@ -262,10 +272,10 @@ Thanks
 
         index++;
         if (linter.strict) {
-          expectLintResult(results[index], {
-            index: { start: 122, finish: 129 },
-            line: { start: 7, finish: 7 },
-            column: { start: 8, finish: 15 },
+          expectLintResult(lints[index], {
+            offset: { begin: 122, end: 129 },
+            line: { begin: 7, end: 7 },
+            column: { begin: 8, end: 15 },
             type: 'warning',
             expression: '[repeat options]',
             message: '(STRICT) Illegal: Array "options"',
@@ -274,10 +284,10 @@ Thanks
           index++;
         }
 
-        expectLintResult(results[index], {
-          index: { start: 246, finish: 252 },
-          line: { start: 15, finish: 15 },
-          column: { start: 27, finish: 33 },
+        expectLintResult(lints[index], {
+          offset: { begin: 246, end: 252 },
+          line: { begin: 15, end: 15 },
+          column: { begin: 27, end: 33 },
           type: 'error',
           expression: '[discount amount]',
           message: 'Unavailable: Property "amount" on Object "discount"',
@@ -286,10 +296,10 @@ Thanks
 
         index++;
 
-        expectLintResult(results[index], {
-          index: { start: 277, finish: 280 },
-          line: { start: 16, finish: 16 },
-          column: { start: 22, finish: 25 },
+        expectLintResult(lints[index], {
+          offset: { begin: 277, end: 280 },
+          line: { begin: 16, end: 16 },
+          column: { begin: 22, end: 25 },
           type: 'error',
           expression: '[if customer is vip]',
           message: 'Unavailable: Boolean "vip"',
@@ -298,10 +308,10 @@ Thanks
 
         index++;
 
-        expectLintResult(results[index], {
-          index: { start: 304, finish: 316 },
-          line: { start: 17, finish: 17 },
-          column: { start: 22, finish: 34 },
+        expectLintResult(lints[index], {
+          offset: { begin: 304, end: 316 },
+          line: { begin: 17, end: 17 },
+          column: { begin: 22, end: 34 },
           type: 'error',
           expression: '[vip customer]',
           message: 'Unavailable: Identifier "vip customer"',
@@ -310,10 +320,10 @@ Thanks
 
         index++;
 
-        expectLintResult(results[index], {
-          index: { start: 362, finish: 386 },
-          line: { start: 19, finish: 19 },
-          column: { start: 31, finish: 55 },
+        expectLintResult(lints[index], {
+          offset: { begin: 362, end: 386 },
+          line: { begin: 19, end: 19 },
+          column: { begin: 31, end: 55 },
           type: 'error',
           expression: '[if something is unavailable]',
           message: 'Unavailable: Object "something" and Boolean "unavailable"',
@@ -323,10 +333,10 @@ Thanks
         index++;
 
         if (linter.strict) {
-          expectLintResult(results[index], {
-            index: { start: 506, finish: 523 },
-            line: { start: 28, finish: 28 },
-            column: { start: 25, finish: 42 },
+          expectLintResult(lints[index], {
+            offset: { begin: 506, end: 523 },
+            line: { begin: 28, end: 28 },
+            column: { begin: 25, end: 42 },
             type: 'warning',
             expression: '[if coupon is applied]',
             message: '(STRICT) Illegal: Condition "coupon is applied"',
@@ -335,10 +345,10 @@ Thanks
           index++;
         }
 
-        expectLintResult(results[index], {
-          index: { start: 560, finish: 564 },
-          line: { start: 29, finish: 29 },
-          column: { start: 13, finish: 17 },
+        expectLintResult(lints[index], {
+          offset: { begin: 560, end: 564 },
+          line: { begin: 29, end: 29 },
+          column: { begin: 13, end: 17 },
           type: linter.strict ? 'warning' : 'error',
           expression: '[if order is paid]',
           message: (linter.strict ? '(STRICT) ' : '') + 'Unavailable: Boolean "paid"',
@@ -348,10 +358,10 @@ Thanks
         index++;
 
         if (linter.strict) {
-          expectLintResult(results[index], {
-            index: { start: 587, finish: 600 },
-            line: { start: 32, finish: 32 },
-            column: { start: 1, finish: 14 },
+          expectLintResult(lints[index], {
+            offset: { begin: 587, end: 600 },
+            line: { begin: 32, end: 32 },
+            column: { begin: 1, end: 14 },
             type: 'warning',
             expression: '[business name]',
             message: '(STRICT) Illegal: Identifier "business name"',

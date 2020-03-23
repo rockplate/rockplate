@@ -3,18 +3,32 @@ import { Builder } from './Builder';
 import { Utils } from './Utils';
 
 type Range = {
-  start: number;
-  finish: number;
+  begin: number;
+  end: number;
 };
 
-export interface LintResult {
-  index: Range;
-  line: Range;
-  column: Range;
-  type: 'error' | 'warning';
+type Position = {
+  begin: { line: number; column: number };
+  end: { line: number; column: number };
+};
+
+type LintResultType = 'error' | 'warning';
+
+export interface Lint {
+  offset: Range;
+  position: Position;
+  type: LintResultType;
   blockType: BlockType;
+  block: Block;
+  scope: any;
   expression: string;
   message: string;
+}
+
+export interface LinterResult {
+  lints: Lint[];
+  hasErrors: boolean;
+  hasWarnings: boolean;
 }
 
 export class Linter<T = any> {
@@ -52,30 +66,47 @@ export class Linter<T = any> {
       .split('\n');
   }
 
-  private lintResult(res: {
-    startIndex: number;
-    finishIndex: number;
-    type: 'error' | 'warning';
-    blockType: BlockType;
+  private createLintResult(res: {
+    offsetBegin: number;
+    offsetEnd: number;
+    type: LintResultType;
+    block: Block;
     expression: string;
     message: string;
-  }): LintResult {
+  }): Lint {
     return {
-      index: { start: res.startIndex, finish: res.finishIndex },
-      line: { start: 1, finish: 1 },
-      column: { start: 0, finish: 0 },
+      offset: { begin: res.offsetBegin, end: res.offsetEnd },
+      // line: { begin: 1, end: 1 },
+      // column: { begin: 0, end: 0 },
+      position: { begin: { line: 1, column: 0 }, end: { line: 1, column: 0 } },
       type: res.type,
       expression: res.expression,
       message: res.message,
-      blockType: res.blockType,
+      blockType: res.block.type,
+      block: res.block,
+      scope: res.block.scope,
     };
   }
 
-  private scanLiteralBlock(block: LiteralBlock, schema: any, params: any, outerOffset: number) {
-    const results: LintResult[] = [];
-    const maxIterations = 1000;
+  private scanLiteralBlock(block: LiteralBlock, schema: any, params: any) {
+    const results: Lint[] = [];
+    const maxIterations = 10000;
     let tplInner = block.outerContent;
-    let offset = 0 + outerOffset;
+    let offset = 0 + block.offsetBegin;
+    let offsetBegin: number;
+    let offsetEnd: number;
+    let expression: string;
+    const getLintResult = (message: string, strict = false): Lint => {
+      return this.createLintResult({
+        type: strict ? 'warning' : 'error',
+        block,
+        offsetBegin,
+        offsetEnd,
+        expression,
+        message,
+      });
+    };
+
     for (let i = 0; i < maxIterations; i++) {
       const idx = tplInner.indexOf('[');
       const endIdx = tplInner.indexOf(']');
@@ -83,28 +114,16 @@ export class Linter<T = any> {
         break;
       }
       let validIdentifier = false;
-      let expression;
-      let startIndex;
-      let finishIndex;
       if (endIdx === -1) {
         expression = tplInner.substr(idx, 10) + '...';
-        startIndex = offset + idx + 1;
-        finishIndex = offset + tplInner.length;
-        results.push(
-          this.lintResult({
-            type: 'error',
-            blockType: 'literal',
-            startIndex,
-            finishIndex,
-            expression,
-            message: 'Invalid: Expression "' + expression + '"',
-          }),
-        );
+        offsetBegin = offset + idx + 1;
+        offsetEnd = offset + tplInner.length;
+        results.push(getLintResult('Invalid: Expression "' + expression + '"'));
         return results;
       }
       const identifier = tplInner.substring(idx + 1, endIdx);
       expression = '[' + identifier + ']';
-      startIndex = offset + idx + 1;
+      offsetBegin = offset + idx + 1;
       validIdentifier = true;
       offset = offset + endIdx + 1;
       tplInner = tplInner.substr(endIdx + 1);
@@ -125,218 +144,158 @@ export class Linter<T = any> {
         break;
       }
 
-      finishIndex = startIndex + identifier.length;
+      offsetEnd = offsetBegin + identifier.length;
 
       const identifiers = this.strict && schema ? this.builder.getIdentifiers(schema) : false;
       const isValidIdentifier = identifiers && this.builder.isValidIdentifier(identifiers, identifier);
 
       if (keyFound && subkeyFound) {
         if (identifiers && !isValidIdentifier) {
-          results.push(
-            this.lintResult({
-              type: 'warning',
-              blockType: 'literal',
-              startIndex,
-              finishIndex,
-              expression,
-              message: '(STRICT) Illegal: Identifier "' + identifier + '"',
-            }),
-          );
+          results.push(getLintResult('(STRICT) Illegal: Identifier "' + identifier + '"', true));
         }
         continue;
       }
 
       if (identifiers && isValidIdentifier) {
-        results.push(
-          this.lintResult({
-            type: 'warning',
-            blockType: 'literal',
-            startIndex,
-            finishIndex,
-            expression,
-            message: '(STRICT) Unavailable: Identifier "' + identifier + '"',
-          }),
-        );
+        results.push(getLintResult('(STRICT) Unavailable: Identifier "' + identifier + '"', true));
         continue;
       }
 
-      startIndex += keyFound ? (keyFound + ' ').length : 0;
-      finishIndex = startIndex + identifier.length - (keyFound ? (keyFound + ' ').length : 0);
-      let message = 'un';
-      message = keyFound
+      offsetBegin += keyFound ? (keyFound + ' ').length : 0;
+      offsetEnd = offsetBegin + identifier.length - (keyFound ? (keyFound + ' ').length : 0);
+      const message = keyFound
         ? 'Unavailable: Property "' + identifier.replace(keyFound + ' ', '') + '" on Object "' + keyFound + '"'
         : 'Unavailable: Identifier "' + identifier + '"';
-      results.push(
-        this.lintResult({
-          type: keyFound ? 'error' : 'error',
-          blockType: 'literal',
-          startIndex,
-          finishIndex,
-          expression,
-          message,
-        }),
-      );
+      results.push(getLintResult(message));
     }
     return results;
   }
 
-  private advanceOffset(block: LiteralBlock | CommentBlock, offset: number) {
-    return offset + block.outerContent.length;
-  }
-
-  private scanBlocks(blocks: Block[], schema: any, params: any, results: LintResult[], outerOffset: number) {
-    let startIndex;
-    let finishIndex;
+  private scanBlocks(blocks: Block[], schema: any, params: any, results: Lint[]) {
+    let offsetBegin: number;
+    let offsetEnd: number;
     for (const block of blocks) {
+      const getLintResult = (message: string, strict = false): Lint => {
+        return this.createLintResult({
+          type: strict ? 'warning' : 'error',
+          block,
+          offsetBegin,
+          offsetEnd,
+          expression: block.expression,
+          message,
+        });
+      };
       if (block instanceof IfBlock) {
         if (!(params[block.key] && typeof params[block.key][block.subkey] === 'boolean')) {
           if (this.strict && schema[block.key] && typeof schema[block.key][block.subkey] === 'boolean') {
             const keyFound = params[block.key] && typeof params[block.key] === 'object';
-            startIndex =
-              outerOffset +
+            offsetBegin =
+              block.offsetBegin +
               this.getBlockPrefix('if').length +
               (keyFound ? (block.key + ' ' + block.operator + ' ').length : 0);
-            finishIndex = outerOffset + block.expression.length - 1;
+            offsetEnd = block.offsetBegin + block.expression.length - 1;
             results.push(
-              this.lintResult({
-                type: 'warning',
-                blockType: 'if',
-                startIndex,
-                finishIndex,
-                expression: block.expression,
-                message:
-                  '(STRICT) Unavailable: ' +
+              getLintResult(
+                '(STRICT) Unavailable: ' +
                   (keyFound ? '' : 'Object "' + block.key + '" and ') +
                   'Boolean "' +
                   block.subkey +
                   '"',
-              }),
+                true,
+              ),
             );
           } else {
             const keyFound = params[block.key] && typeof params[block.key] === 'object';
-            startIndex =
-              outerOffset +
+            offsetBegin =
+              block.offsetBegin +
               this.getBlockPrefix('if').length +
               (keyFound ? (block.key + ' ' + block.operator + ' ').length : 0);
-            finishIndex = outerOffset + block.expression.length - 1;
+            offsetEnd = block.offsetBegin + block.expression.length - 1;
             results.push(
-              this.lintResult({
-                type: 'error',
-                blockType: 'if',
-                startIndex,
-                finishIndex,
-                expression: block.expression,
-                message:
-                  'Unavailable: ' +
+              getLintResult(
+                'Unavailable: ' +
                   (keyFound ? '' : 'Object "' + block.key + '" and ') +
                   'Boolean "' +
                   block.subkey +
                   '"',
-              }),
+              ),
             );
           }
         } else if (this.strict && !(schema[block.key] && typeof schema[block.key][block.subkey] === 'boolean')) {
-          startIndex = outerOffset + this.getBlockPrefix('if').length;
-          finishIndex = outerOffset + block.expression.length - 1;
+          offsetBegin = block.offsetBegin + this.getBlockPrefix('if').length;
+          offsetEnd = block.offsetBegin + block.expression.length - 1;
           results.push(
-            this.lintResult({
-              type: 'warning',
-              blockType: 'if',
-              startIndex,
-              finishIndex,
-              expression: block.expression,
-              message: '(STRICT) Illegal: Condition "' + (block.key + ' ' + block.operator + ' ' + block.subkey) + '"',
-            }),
+            getLintResult(
+              '(STRICT) Illegal: Condition "' + (block.key + ' ' + block.operator + ' ' + block.subkey) + '"',
+              true,
+            ),
           );
         }
-        outerOffset = outerOffset + block.expression.length;
-        outerOffset = this.scanBlocks(block.children, schema, params, results, outerOffset);
+        this.scanBlocks(block.children, schema, params, results);
         if (block.elseChildren.length) {
-          outerOffset = outerOffset + '[else]'.length;
-          outerOffset = this.scanBlocks(block.elseChildren, schema, params, results, outerOffset);
+          this.scanBlocks(block.elseChildren, schema, params, results);
         }
-        outerOffset = outerOffset + block.expressionEnd.length;
         continue;
       } else if (block instanceof RepeatBlock) {
+        offsetBegin = block.offsetBegin + this.getBlockPrefix('repeat').length;
+        offsetEnd = block.offsetBegin + block.expression.length - 1;
         if (!Array.isArray(params[block.key])) {
           if (this.strict && Array.isArray(schema[block.key])) {
-            startIndex = outerOffset + this.getBlockPrefix('repeat').length;
-            finishIndex = outerOffset + block.expression.length - 1;
-            results.push(
-              this.lintResult({
-                type: 'warning',
-                blockType: 'repeat',
-                startIndex,
-                finishIndex,
-                expression: block.expression,
-                message: '(STRICT) Unavailable: Array "' + block.key + '"',
-              }),
-            );
+            results.push(getLintResult('(STRICT) Unavailable: Array "' + block.key + '"', true));
           } else {
-            startIndex = outerOffset + this.getBlockPrefix('repeat').length;
-            finishIndex = outerOffset + block.expression.length - 1;
-            results.push(
-              this.lintResult({
-                type: 'error',
-                blockType: 'repeat',
-                startIndex,
-                finishIndex,
-                expression: block.expression,
-                message: 'Unavailable: Array "' + block.key + '"',
-              }),
-            );
+            results.push(getLintResult('Unavailable: Array "' + block.key + '"'));
           }
         } else if (this.strict && !Array.isArray(schema[block.key])) {
-          startIndex = outerOffset + this.getBlockPrefix('repeat').length;
-          finishIndex = outerOffset + block.expression.length - 1;
-          results.push(
-            this.lintResult({
-              type: 'warning',
-              blockType: 'repeat',
-              startIndex,
-              finishIndex,
-              expression: block.expression,
-              message: '(STRICT) Illegal: Array "' + block.key + '"',
-            }),
-          );
+          results.push(getLintResult('(STRICT) Illegal: Array "' + block.key + '"', true));
         }
-        outerOffset = outerOffset + block.expression.length;
         const mergedSchema = this.getParamsMergedForBlock(block, schema);
         const mergedParams = this.getParamsMergedForBlock(block, params);
-        outerOffset = this.scanBlocks(block.children, mergedSchema, mergedParams, results, outerOffset);
-        outerOffset = outerOffset + block.expressionEnd.length;
+        this.scanBlocks(block.children, mergedSchema, mergedParams, results);
         continue;
       } else if (block instanceof LiteralBlock) {
-        results.push(...this.scanLiteralBlock(block, schema, params, outerOffset));
-        outerOffset = this.advanceOffset(block, outerOffset);
+        results.push(...this.scanLiteralBlock(block, schema, params));
         continue;
       } else {
-        outerOffset = this.advanceOffset(block, outerOffset);
         continue;
       }
     }
-    return outerOffset;
   }
 
-  private findLineAndColumn(res: LintResult) {
-    const lines = this.getLines(this.builder.template.substr(0, res.index.start + 1));
-    res.line = { start: lines.length, finish: lines.length };
+  private resolveLineAndColumn(res: Lint) {
+    const lines = this.getLines(this.builder.template.substr(0, res.offset.begin + 1));
+    res.position.begin.line = lines.length;
+    res.position.end.line = lines.length;
     const columnBegin = lines[lines.length - 1].length - 1;
-    const columnEnd = columnBegin + (res.index.finish - res.index.start);
-    res.column = { start: columnBegin, finish: columnEnd };
+    const columnEnd = columnBegin + (res.offset.end - res.offset.begin);
+    res.position.begin.column = columnBegin;
+    res.position.end.column = columnEnd;
     return res;
   }
 
-  public lint(params?: T) {
-    const results: LintResult[] = [];
+  public lint(params?: T, resolveLines = true): LinterResult {
+    const lints: Lint[] = [];
     const schema = this.schema || {};
     if (params === undefined) {
       params = schema as T;
     }
-    this.scanBlocks(this.builder.blocks, schema, params, results, this.builder.blocks[0].offsetBegin);
-    for (const res of results) {
-      this.findLineAndColumn(res);
-    }
-    return results;
+    this.scanBlocks(this.builder.blocks, schema, params, lints);
+    let hasErrors = false;
+    let hasWarnings = false;
+    lints.map((lint) => {
+      if (lint.type === 'error') {
+        hasErrors = true;
+      }
+      if (lint.type === 'warning') {
+        hasWarnings = true;
+      }
+      if (resolveLines) {
+        this.resolveLineAndColumn(lint);
+      }
+    });
+    return {
+      lints,
+      hasErrors,
+      hasWarnings,
+    };
   }
 }
