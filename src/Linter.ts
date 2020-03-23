@@ -333,7 +333,7 @@ export class Linter<T = any> {
     if (params === undefined) {
       params = schema as T;
     }
-    this.scanBlocks(this.builder.blocks, schema, params, results, this.builder.blocks[0].outerBeginIndex);
+    this.scanBlocks(this.builder.blocks, schema, params, results, this.builder.blocks[0].offsetBegin);
     for (const res of results) {
       this.findLineAndColumn(res);
     }

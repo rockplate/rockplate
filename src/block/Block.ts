@@ -1,8 +1,8 @@
 export type BlockType = 'repeat' | 'if' | 'literal' | 'comment';
 
 export interface BlockParams {
-  outerBeginIndex?: number;
-  outerEndIndex?: number;
+  offsetBegin?: number;
+  offsetEnd?: number;
   expression?: string;
   expressionEnd?: string;
   type?: BlockType;
@@ -15,8 +15,8 @@ export interface BlockParams {
 }
 
 export class Block implements BlockParams {
-  outerBeginIndex: number = 0;
-  outerEndIndex: number = 0;
+  offsetBegin: number = 0;
+  offsetEnd: number = 0;
   expression: string = '';
   expressionEnd: string = '';
   type: BlockType = 'literal';

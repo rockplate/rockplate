@@ -198,8 +198,6 @@ export class Builder<T> {
       blockType,
       key,
     };
-    // }
-    // }
   }
 
   private getStrictBlockDefinition(
@@ -300,11 +298,11 @@ export class Builder<T> {
   }
 
   private findNextBlock(tpl: string, schema: any, block: Block) {
-    tpl = tpl.substr(block.outerEndIndex);
+    tpl = tpl.substr(block.offsetEnd);
     const nextBlock = this.findFirstBlock(tpl, schema);
     if (nextBlock) {
-      nextBlock.outerBeginIndex += block.outerEndIndex;
-      nextBlock.outerEndIndex += block.outerEndIndex;
+      nextBlock.offsetBegin += block.offsetEnd;
+      nextBlock.offsetEnd += block.offsetEnd;
     }
     return nextBlock;
   }
@@ -354,10 +352,10 @@ export class Builder<T> {
 
   private getLiteralBlock(tpl: string, schema: any, prevBlock?: Block, nextBlock?: Block): Block {
     const block = createBlock('literal', {
-      outerBeginIndex: prevBlock ? prevBlock.outerEndIndex : 0,
-      outerEndIndex: nextBlock ? nextBlock.outerBeginIndex : tpl.length,
+      offsetBegin: prevBlock ? prevBlock.offsetEnd : 0,
+      offsetEnd: nextBlock ? nextBlock.offsetBegin : tpl.length,
     }) as LiteralBlock;
-    block.content = tpl.substring(block.outerBeginIndex, block.outerEndIndex);
+    block.content = tpl.substring(block.offsetBegin, block.offsetEnd);
     block.outerContent = block.content;
     if (this.strict) {
       block.identifiers = [];
@@ -440,8 +438,8 @@ export class Builder<T> {
       return;
     }
     const block = createBlock(blockType, {
-      outerBeginIndex: idx,
-      outerEndIndex: idxEnd + end.length,
+      offsetBegin: idx,
+      offsetEnd: idxEnd + end.length,
       expression,
       expressionEnd: end,
       key,
@@ -449,7 +447,7 @@ export class Builder<T> {
       operator,
     });
     block.content = tpl.substring(idx + expression.length, idxEnd);
-    block.outerContent = tpl.substring(block.outerBeginIndex, block.outerEndIndex);
+    block.outerContent = tpl.substring(block.offsetBegin, block.offsetEnd);
     block.scope = schema;
     return block;
   }
@@ -482,7 +480,7 @@ export class Builder<T> {
 
   private repairOffsets(blocks: Block[], outerOffset: number) {
     for (const block of blocks) {
-      block.outerBeginIndex = outerOffset;
+      block.offsetBegin = outerOffset;
       if (block instanceof IfBlock) {
         outerOffset = outerOffset + block.expression.length;
         outerOffset = this.repairOffsets(block.children, outerOffset);
@@ -500,7 +498,7 @@ export class Builder<T> {
       } else {
         outerOffset = this.advanceOffset(block, outerOffset);
       }
-      block.outerEndIndex = outerOffset;
+      block.offsetEnd = outerOffset;
     }
     return outerOffset;
   }
@@ -508,7 +506,7 @@ export class Builder<T> {
   private getBlockAtIndex(blocks: Block[], index: number): Block | undefined {
     let foundBlock: Block | undefined;
     for (const block of blocks) {
-      if (!(index >= block.outerBeginIndex && index <= block.outerEndIndex)) {
+      if (!(index >= block.offsetBegin && index <= block.offsetEnd)) {
         continue;
       }
       if (block instanceof IfBlock) {
