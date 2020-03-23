@@ -11,10 +11,6 @@ export class Rockplate<T = any> {
     this.parser = new Parser(this.builder);
   }
 
-  // public build() {
-  //   return this.builder.build();
-  // }
-
   public parse(params: T) {
     return this.parser.parse(params);
   }

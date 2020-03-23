@@ -49,7 +49,6 @@ export class Parser<T = any> {
         }
         if (this.builder.strict && !this.builder.isValidIdentifier(block.identifiers, identifier)) {
           continue;
-          // return result;
         }
         result = result.split(expression).join(params[key][subkey]);
       }
@@ -57,39 +56,22 @@ export class Parser<T = any> {
     return result;
   }
   private getBlockParsed(block: Block, params: any) {
-    // if (block.type === 'comment') {
-    //   return this.processBlock(block, params);
-    // } else if (block.type === 'literal') {
-    //   return this.processBlock(block, params);
-    // } else
     if (block instanceof IfBlock /*  block.type === 'if' */) {
       let result: boolean = false;
       if (!(params[block.key] && typeof params[block.key][block.subkey as string] === 'boolean')) {
         return block.outerContent;
       }
       const value = params[block.key][block.subkey as string];
-      // if (block.operator === 'is' || block.operator === 'is not') {
-      result = value === (block.operator === 'is not' || block.operator === 'are not' ? false : true); // else { // never reached //   throw new Error('Wrong operator "' + block.operator + '" in if condition'); // }
-      // }
-      /*  else if (block.operator === 'has' || block.operator === 'has not') {
-        if (value) {
-          result = block.operator === 'has';
-        } else {
-          result = block.operator === 'has not';
-        }
-      // } */ if (
-        !result
-      ) {
+      result = value === (block.operator === 'is not' || block.operator === 'are not' ? false : true);
+
+      if (!result) {
         if (block.elseChildren.length) {
           return this.getBlocksParsed(block.elseChildren, params);
         }
         return '';
       }
-      // if (!block.children.length) {
-      //   return;
-      // }
+
       return this.getBlocksParsed(block.children, params);
-      // return this.processBlock(block, mergedParams); // never reached?
     } else if (block.type === 'repeat') {
       if (!Array.isArray(params[block.key])) {
         return block.outerContent; // do not parse
@@ -98,10 +80,6 @@ export class Parser<T = any> {
       for (const childParams of params[block.key]) {
         const mergedParams = this.getParamsMergedForBlock(block, params, childParams);
         result += this.getBlocksParsed(block.children, mergedParams);
-        // if (block.children.length) {
-        // } else {
-        //   result += this.processBlock(block, mergedParams); // never reached?
-        // }
       }
       return result;
     }

@@ -19,16 +19,10 @@ export interface LintResult {
 
 export class Linter<T = any> {
   public builder: Builder<T>;
-  // public strictBuilder?: Builder;
   private lines: string[] = [];
-  // public parser: Parser;
 
   public constructor(public template: string, schema?: T, private strictOverride?: boolean) {
     this.builder = new Builder(template, schema, false);
-    // if (schema) {
-    //   this.strictBuilder = new Builder(template, schema);
-    // }
-    // this.parser = new Parser(this.builder);
   }
 
   public get schema() {
@@ -51,26 +45,14 @@ export class Linter<T = any> {
     return Utils.getParamsMergedForBlock(block, params, childParams);
   }
 
-  // public build() {
-  //   return this.builder.build();
-  // }
-
   private getLines(text: string) {
-    // return [text];
     return text
       .split('\r\n')
       .join('\n')
       .split('\n');
-    // return text
-    //   .split('\r\n')
-    //   .join('\r')
-    //   .split('\n')
-    //   .join('\r')
-    //   .split('\r');
   }
 
   private lintResult(res: {
-    // index: Range;
     startIndex: number;
     finishIndex: number;
     type: 'error' | 'warning';
@@ -98,11 +80,8 @@ export class Linter<T = any> {
       const idx = tplInner.indexOf('[');
       const endIdx = tplInner.indexOf(']');
       if (idx === -1) {
-        // continue;
-        // return results;
         break;
       }
-      // let identifier = '';
       let validIdentifier = false;
       let expression;
       let startIndex;
@@ -126,7 +105,6 @@ export class Linter<T = any> {
       const identifier = tplInner.substring(idx + 1, endIdx);
       expression = '[' + identifier + ']';
       startIndex = offset + idx + 1;
-      // console.log('the expression', identifier);
       validIdentifier = true;
       offset = offset + endIdx + 1;
       tplInner = tplInner.substr(endIdx + 1);
@@ -142,25 +120,11 @@ export class Linter<T = any> {
             continue;
           }
           subkeyFound = subkey;
-          // const expression = expression;
-          // if (tplInner.substr(key.length + ' '.length + subkey.length, 1) !== ']') {
-          //   results.push({
-          //     type: 'error',
-          //     line: 1,
-          //     column: 0,
-          //     expression: '',
-          //     message: '[' + key + ' ' + subkey + ': "]" expected',
-          //   });
-          // }
-          //
           break;
         }
         break;
       }
 
-      // startIndex += keyFound ? (keyFound + ' ').length : 0;
-      // finishIndex += identifier.length;
-      // }
       finishIndex = startIndex + identifier.length;
 
       const identifiers = this.strict && schema ? this.builder.getIdentifiers(schema) : false;
@@ -198,9 +162,7 @@ export class Linter<T = any> {
 
       startIndex += keyFound ? (keyFound + ' ').length : 0;
       finishIndex = startIndex + identifier.length - (keyFound ? (keyFound + ' ').length : 0);
-      // if (!keyFound || !subkeyFound) {
       let message = 'un';
-      // if (validIdentifier) {
       message = keyFound
         ? 'Unavailable: Property "' + identifier.replace(keyFound + ' ', '') + '" on Object "' + keyFound + '"'
         : 'Unavailable: Identifier "' + identifier + '"';
@@ -214,13 +176,9 @@ export class Linter<T = any> {
           message,
         }),
       );
-      // }
     }
     return results;
   }
-  // private scanBlock(block: Block) {
-  //   return undefined;
-  // }
 
   private advanceOffset(block: LiteralBlock | CommentBlock, offset: number) {
     return offset + block.outerContent.length;
@@ -246,12 +204,6 @@ export class Linter<T = any> {
                 startIndex,
                 finishIndex,
                 expression: block.expression,
-                // message:
-                //   'STRICT: ' +
-                //   (keyFound ? '' : '"' + block.key + '" is not provided and ') +
-                //   '"' +
-                //   block.subkey +
-                //   '" is not provided',
                 message:
                   '(STRICT) Unavailable: ' +
                   (keyFound ? '' : 'Object "' + block.key + '" and ') +
@@ -274,11 +226,6 @@ export class Linter<T = any> {
                 startIndex,
                 finishIndex,
                 expression: block.expression,
-                // message:
-                //   (keyFound ? '' : '"' + block.key + '" is not an object and ') +
-                //   '"' +
-                //   block.subkey +
-                //   '" is not boolean',
                 message:
                   'Unavailable: ' +
                   (keyFound ? '' : 'Object "' + block.key + '" and ') +
@@ -306,11 +253,9 @@ export class Linter<T = any> {
         outerOffset = this.scanBlocks(block.children, schema, params, results, outerOffset);
         if (block.elseChildren.length) {
           outerOffset = outerOffset + '[else]'.length;
-          // outerOffset = this.advanceOffset(block, outerOffset);
           outerOffset = this.scanBlocks(block.elseChildren, schema, params, results, outerOffset);
         }
         outerOffset = outerOffset + block.expressionEnd.length;
-        // outerOffset = this.advanceOffset(block, outerOffset);
         continue;
       } else if (block instanceof RepeatBlock) {
         if (!Array.isArray(params[block.key])) {
@@ -324,7 +269,6 @@ export class Linter<T = any> {
                 startIndex,
                 finishIndex,
                 expression: block.expression,
-                // message: block.expression + ': [' + block.key + '] is not an array',
                 message: '(STRICT) Unavailable: Array "' + block.key + '"',
               }),
             );
@@ -338,7 +282,6 @@ export class Linter<T = any> {
                 startIndex,
                 finishIndex,
                 expression: block.expression,
-                // message: block.expression + ': [' + block.key + '] is not an array',
                 message: 'Unavailable: Array "' + block.key + '"',
               }),
             );
@@ -353,7 +296,6 @@ export class Linter<T = any> {
               startIndex,
               finishIndex,
               expression: block.expression,
-              // message: block.expression + ': [' + block.key + '] is not an array',
               message: '(STRICT) Illegal: Array "' + block.key + '"',
             }),
           );
@@ -363,12 +305,10 @@ export class Linter<T = any> {
         const mergedParams = this.getParamsMergedForBlock(block, params);
         outerOffset = this.scanBlocks(block.children, mergedSchema, mergedParams, results, outerOffset);
         outerOffset = outerOffset + block.expressionEnd.length;
-        // outerOffset = this.advanceOffset(block, outerOffset);
         continue;
       } else if (block instanceof LiteralBlock) {
         results.push(...this.scanLiteralBlock(block, schema, params, outerOffset));
         outerOffset = this.advanceOffset(block, outerOffset);
-        // what happens to the last offset?
         continue;
       } else {
         outerOffset = this.advanceOffset(block, outerOffset);
@@ -380,23 +320,15 @@ export class Linter<T = any> {
 
   private findLineAndColumn(res: LintResult) {
     const lines = this.getLines(this.builder.template.substr(0, res.index.start + 1));
-    // const lthis.getLines(this.builder.template);
     res.line = { start: lines.length, finish: lines.length };
     const columnBegin = lines[lines.length - 1].length - 1;
     const columnEnd = columnBegin + (res.index.finish - res.index.start);
     res.column = { start: columnBegin, finish: columnEnd };
-    // res.lineEnd = res.lineBegin;
-    // res.columnEnd = res.;
     return res;
   }
 
   public lint(params?: T) {
     const results: LintResult[] = [];
-    // const blocks = this.builder.blocks;
-    // const lines = this.getLines(this.builder.template);
-    // console.log('lines: ', lines);
-    // return this.parser.parse(params);
-    // this.lines = this.getLines(this.builder.template);
     const schema = this.schema || {};
     if (params === undefined) {
       params = schema as T;

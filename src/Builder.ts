@@ -1,17 +1,8 @@
-import {
-  Block,
-  BlockType,
-  /* IfBlock, CommentBlock, RepeatBlock, LiteralBlock, */ createBlock,
-  IfBlock,
-  LiteralBlock,
-  RepeatBlock,
-  CommentBlock,
-} from './block/index';
+import { Block, BlockType, createBlock, IfBlock, LiteralBlock, RepeatBlock, CommentBlock } from './block/index';
 import { Utils } from './Utils';
 
 export interface BlockDefinition {
   blockType: BlockType;
-  // expression?: string;
   key?: string;
   operator?: string;
   subkey?: string;
@@ -46,7 +37,6 @@ export class Builder<T> {
   }
 
   public build() {
-    // const schemaBlock = this.findSchemaBlock(this.template);
     const sch = this.getSchemaFromString(this.template);
     let offset = 0;
     if (sch) {
@@ -111,25 +101,21 @@ export class Builder<T> {
   }
 
   private findOuterBlocks(tpl: string, schema: any) {
-    // return this.findOuterBlocksRecursively(tpl, schema);
     const outerBlocks = this.findOuterBlocksRecursively(tpl, schema);
     for (const block of outerBlocks) {
       if (block.type === 'repeat') {
         const mergedSchema = this.getParamsMergedForBlock(block, schema);
         block.children = this.findOuterBlocks(block.content, mergedSchema);
-      } else if (block instanceof IfBlock /*  block.type === 'if' */) {
-        // const idx = block.content.indexOf()
+      } else if (block instanceof IfBlock) {
         const children = this.findOuterBlocks(block.content, schema);
         let positive: Block[] = [];
         let negative: Block[] = [];
-        // let elseFound = false;
         let elseBlock: Block | undefined;
         for (const child of children.concat([]).reverse()) {
           if (child.type === 'literal') {
             const idx = child.content.indexOf('[else]');
             if (idx !== -1) {
               elseBlock = child;
-              // negative = positive;
               continue;
             }
           }
@@ -152,38 +138,19 @@ export class Builder<T> {
     return outerBlocks;
   }
 
-  // private addToOuterBlocks(outerBlocks: Block[], block: Block, schema: any) {
-  //   // if (block.type === 'repeat') {
-  //   //   const mergedSchema = this.getParamsMergedForBlock(block, schema);
-  //   //   block.children = this.findOuterBlocks(block.content, mergedSchema);
-  //   // } else if (block.type === 'if') {
-  //   //   block.children = this.findOuterBlocks(block.content, schema);
-  //   // }
-  //   outerBlocks.push(block);
-  // }
-
   private findOuterBlocksRecursively(tpl: string, schema: any) {
     const outerBlocks: Block[] = [];
     let nextBlock = this.findFirstBlock(tpl, schema);
     outerBlocks.push(this.getLiteralBlock(tpl, schema, undefined, nextBlock));
-    // this.addToOuterBlocks(outerBlocks, this.getLiteralBlock(tpl, undefined, nextBlock), schema);
-    // let i = 0;
     const maxIterations = 1000;
     for (let i = 0; i < maxIterations; i++) {
-      // while (true) {
-      //   if (i > maxIterations) {
-      //     break;
-      //   }
       if (!nextBlock) {
         break;
       }
       outerBlocks.push(nextBlock);
-      // this.addToOuterBlocks(outerBlocks, nextBlock, schema);
       const prevBlock = nextBlock;
       nextBlock = this.findNextBlock(tpl, schema, nextBlock);
       outerBlocks.push(this.getLiteralBlock(tpl, schema, prevBlock, nextBlock));
-      // this.addToOuterBlocks(outerBlocks, this.getLiteralBlock(tpl, prevBlock, nextBlock), schema);
-      // i++;
     }
     return outerBlocks;
   }
@@ -205,14 +172,13 @@ export class Builder<T> {
     const prefix = this.getBlockPrefix(blockType);
     const offset = idx + prefix.length;
     const tplInner = tpl.substr(offset);
-    // if (blockType === 'repeat' || blockType === 'if') {
     const endIdx = tplInner.indexOf(']');
     if (endIdx === -1) {
       return;
     }
     const key = tplInner.substring(0, endIdx);
     if (blockType === 'if') {
-      const operators = ['are not', 'are', 'is not', 'is' /* , 'has not', 'has' */];
+      const operators = ['are not', 'are', 'is not', 'is'];
       for (const operator of operators) {
         const operatorStr = ' ' + operator + ' ';
         const opIdx = key.indexOf(operatorStr);
@@ -250,33 +216,26 @@ export class Builder<T> {
       if (!schema.hasOwnProperty(key)) {
         continue;
       }
-      // console.log('params: ', blockType, key, Array.isArray(schema[key]));
       if (blockType === 'repeat' && Array.isArray(schema[key])) {
         const expression = prefix + '' + key + ']';
         if (tpl.substr(idx, expression.length) === expression) {
-          // console.log('expression', expression, tpl.substr(idx, expression.length) === expression);
           return {
             blockType,
-            // expression,
             key,
           };
         }
       }
       if (blockType === 'if' && !Array.isArray(schema[key])) {
-        // if (prefix === prefixes.if) {
         for (const subkey in schema[key]) {
           if (!schema[key].hasOwnProperty(subkey)) {
             continue;
           }
-          const operators = ['are not', 'are', 'is not', 'is' /* , 'has not', 'has' */];
+          const operators = ['are not', 'are', 'is not', 'is'];
           for (const operator of operators) {
             const expression = prefix + '' + key + ' ' + operator + ' ' + subkey + ']';
-            // console.log('expression', expression, schema[key]);
             if (tpl.substr(idx, expression.length) === expression) {
               return {
                 blockType,
-                // prefix,
-                // expression,
                 key,
                 operator,
                 subkey,
@@ -284,7 +243,6 @@ export class Builder<T> {
             }
           }
         }
-        // }
       }
     }
   }
@@ -308,11 +266,9 @@ export class Builder<T> {
 
   private findFirstBlock(tpl: string, schema: any): Block | undefined {
     let minIndex = Number.MAX_SAFE_INTEGER;
-    // const found = { comment: false, if: false, repeat: false };
     const blockDefinitions: any = {};
     for (const blockType of ['comment', 'if', 'repeat'] as BlockType[]) {
       const idx = tpl.indexOf(this.getBlockPrefix(blockType));
-      // if (!(idx !== -1 && idx < minIndex)) {
       if (idx === -1) {
         continue;
       }
@@ -320,7 +276,6 @@ export class Builder<T> {
       if (!(blkDef && idx < minIndex)) {
         continue;
       }
-      // console.log('idx : ', idx, blkDef);
       minIndex = idx;
       blockDefinitions[idx] = blkDef;
     }
@@ -337,10 +292,8 @@ export class Builder<T> {
         blockDefinition.subkey,
         minIndex,
       );
-      // return this.getRepeatBlock(tpl, blockDefinition.key);
     }
     if (blockDefinition.blockType === 'repeat') {
-      // console.log('blockDefinition3', blockDefinition);
       return this.getRepeatBlock(tpl, schema, blockDefinition.key, minIndex);
     }
     return this.getCommentBlock(tpl, minIndex);
@@ -351,27 +304,21 @@ export class Builder<T> {
     const nextBlock = this.findFirstBlock(tpl, schema);
     if (nextBlock) {
       nextBlock.outerBeginIndex += block.outerEndIndex;
-      // nextBlock.innerBeginIndex += block.outerEndIndex;
-      // nextBlock.innerEndIndex += block.outerEndIndex;
       nextBlock.outerEndIndex += block.outerEndIndex;
     }
     return nextBlock;
   }
 
   public isValidIdentifier(identifiers: { key: string; subkey: string }[], identifier: string) {
-    // return identifiers.indexOf(identifier) !== -1;
     return identifiers.map((idf) => idf.key + ' ' + idf.subkey).indexOf(identifier) !== -1;
   }
 
   public getIdentifiers(schema: any) {
-    return (
-      this.getVariables(schema)
-        .filter((varialbe) => varialbe.type !== 'array')
-        //  .map((variable) => variable.key + ' ' + variable.subkey);
-        .map((variable) => {
-          return { key: variable.key, subkey: variable.subkey };
-        })
-    );
+    return this.getVariables(schema)
+      .filter((varialbe) => varialbe.type !== 'array')
+      .map((variable) => {
+        return { key: variable.key, subkey: variable.subkey };
+      });
   }
 
   public getVariables(schema: any) {
@@ -408,8 +355,6 @@ export class Builder<T> {
   private getLiteralBlock(tpl: string, schema: any, prevBlock?: Block, nextBlock?: Block): Block {
     const block = createBlock('literal', {
       outerBeginIndex: prevBlock ? prevBlock.outerEndIndex : 0,
-      // innerBeginIndex: prevBlock ? prevBlock.outerEndIndex : 0,
-      // innerEndIndex: nextBlock ? nextBlock.outerBeginIndex : tpl.length,
       outerEndIndex: nextBlock ? nextBlock.outerBeginIndex : tpl.length,
     }) as LiteralBlock;
     block.content = tpl.substring(block.outerBeginIndex, block.outerEndIndex);
@@ -433,9 +378,7 @@ export class Builder<T> {
           key: variable.key,
           subkey: variable.subkey,
         });
-        // block.identifiers.push(variable.key + ' ' + variable.subkey); // booleans are valid identifiers
       }
-      // block.identifiers = this.getVariables(schema);
     }
     block.scope = schema;
     return block;
@@ -452,16 +395,10 @@ export class Builder<T> {
     subkey?: string,
     operator?: string,
   ) {
-    // idx = idx || tpl.indexOf(expression);
-    // if (idx === -1) {
-    //   return;
-    // }
     let idxEnd = -1;
-    // tpl = tpl.substr(idx);
     const prefix = this.getBlockPrefix(blockType);
     let offset = idx + expression.length;
     let tplInner = tpl.substr(offset);
-    // let tplPartial = tpl.substr(idx + expression.length);
     if (blockType === 'comment') {
       idxEnd = tplInner.indexOf(end);
       if (idxEnd !== -1) {
@@ -469,30 +406,22 @@ export class Builder<T> {
       }
     } else {
       const maxIterations = 1000;
-      // let nextIdx;
-      // idxEnd = tplPartial.lastIndexOf(end);
       let nextIdx;
       let nextEndIdx;
       let level = 0;
-      // const levelEnds = [];
       for (let i = 0; i < maxIterations; i++) {
         nextIdx = tplInner.indexOf(prefix);
         nextEndIdx = tplInner.indexOf(end);
-        // levelEnds.push(offset + nextEndIdx);
         if (nextEndIdx !== -1 && (nextIdx === -1 || nextEndIdx < nextIdx)) {
-          // idxEnd = nextEndIdx;
           break;
         }
         if (nextIdx !== -1 && nextIdx < nextEndIdx) {
           level++;
           tplInner = tplInner.substr(nextIdx + prefix.length);
-          // offset = offset + nextIdx + prefix.length;
-          //
         }
       }
       tplInner = tpl.substr(offset);
       const levelEnds = [];
-      // let
       for (let i = 0; i <= level; i++) {
         nextEndIdx = tplInner.indexOf(end);
         if (nextEndIdx !== -1) {
@@ -504,29 +433,14 @@ export class Builder<T> {
         }
       }
       if (levelEnds[level] !== undefined && levelEnds[level] !== -1) {
-        // levelEnds;
         idxEnd = levelEnds[level];
       }
-      // console.log('level', 'level', levelEnds);
-      // if (idxEnd === -1) {
-      //   for (let i = 0; i <= level; i++) {
-      //     idxEnd = tplInner.indexOf(end);
-      //     if (idxEnd !== -1) {
-      //       tplInner = tplInner.substr(idxEnd + prefix.length);
-      //       offset = offset + nextIdx;
-      //     }
-      //   }
-      // }
-      // idxEnd = idxEnd + offset;
     }
     if (idxEnd === -1) {
       return;
     }
-    // idxEnd = offset + idxEnd;
     const block = createBlock(blockType, {
       outerBeginIndex: idx,
-      // innerBeginIndex: idx + expression.length,
-      // innerEndIndex: idxEnd,
       outerEndIndex: idxEnd + end.length,
       expression,
       expressionEnd: end,
@@ -577,18 +491,14 @@ export class Builder<T> {
           outerOffset = this.repairOffsets(block.elseChildren, outerOffset);
         }
         outerOffset = outerOffset + block.expressionEnd.length;
-        // continue;
       } else if (block instanceof RepeatBlock) {
         outerOffset = outerOffset + block.expression.length;
         outerOffset = this.repairOffsets(block.children, outerOffset);
         outerOffset = outerOffset + block.expressionEnd.length;
-        // continue;
       } else if (block instanceof LiteralBlock) {
         outerOffset = this.advanceOffset(block, outerOffset);
-        // continue;
       } else {
         outerOffset = this.advanceOffset(block, outerOffset);
-        // continue;
       }
       block.outerEndIndex = outerOffset;
     }

@@ -22,21 +22,11 @@ export class Utils {
     if (!childParams && !(block.key && params[block.key] && params[block.key][0])) {
       return params;
     }
-    // const mergedParams: any = {};
-    // for (const k in params) {
-    //   if (params.hasOwnProperty(k)) {
-    //     mergedParams[k] = params[k];
-    //   }
-    // }
+
     if (!childParams) {
       childParams = params[block.key][0];
     }
-    // for (const k in childParams) {
-    //   if (childParams.hasOwnProperty(k)) {
-    //     mergedParams[k] = childParams[k];
-    //   }
-    // }
-    // return mergedParams;
+
     return Utils.getParamsMerged(params, childParams);
   }
 }

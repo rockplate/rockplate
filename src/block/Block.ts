@@ -2,8 +2,6 @@ export type BlockType = 'repeat' | 'if' | 'literal' | 'comment';
 
 export interface BlockParams {
   outerBeginIndex?: number;
-  // innerBeginIndex?: number;
-  // innerEndIndex?: number;
   outerEndIndex?: number;
   expression?: string;
   expressionEnd?: string;
@@ -18,8 +16,6 @@ export interface BlockParams {
 
 export class Block implements BlockParams {
   outerBeginIndex: number = 0;
-  // innerBeginIndex: number = 0;
-  // innerEndIndex: number = 0;
   outerEndIndex: number = 0;
   expression: string = '';
   expressionEnd: string = '';
@@ -28,8 +24,6 @@ export class Block implements BlockParams {
   outerContent: string = '';
   children: Block[] = [];
   key: string = '';
-  // subkey?: string;
-  // operator?: string;
   scope: any;
   thisIsClass = true;
 }
