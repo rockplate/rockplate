@@ -122,7 +122,7 @@ Value: Collection of `Booleans` or `Identifers`
       },
       "discount" : {
         "available": false,
-        "value": "5%"
+        "amount": "5%"
       }
     }
   ]
@@ -140,7 +140,7 @@ Your orders:
  Status: [order status]
 
  [if discount is available]
-   Discount: [discount value]
+   Discount: [discount amount]
  [end if]
 
 [end repeat]
