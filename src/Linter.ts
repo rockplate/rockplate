@@ -59,13 +59,6 @@ export class Linter<T = any> {
     return Utils.getParamsMergedForBlock(block, params, childParams);
   }
 
-  private getLines(text: string) {
-    return text
-      .split('\r\n')
-      .join('\n')
-      .split('\n');
-  }
-
   private createLintResult(res: {
     offsetBegin: number;
     offsetEnd: number;
@@ -262,13 +255,11 @@ export class Linter<T = any> {
   }
 
   private resolveLineAndColumn(res: Lint) {
-    const lines = this.getLines(this.builder.template.substr(0, res.offset.begin + 1));
-    res.position.begin.line = lines.length;
-    res.position.end.line = lines.length;
-    const columnBegin = lines[lines.length - 1].length - 1;
-    const columnEnd = columnBegin + (res.offset.end - res.offset.begin);
-    res.position.begin.column = columnBegin;
-    res.position.end.column = columnEnd;
+    const position = Utils.getPositionAt(this.builder.template, res.offset.begin);
+    res.position.begin.line = position.line;
+    res.position.begin.column = position.column;
+    res.position.end.line = position.line;
+    res.position.end.column = position.column + (res.offset.end - res.offset.begin);
     return res;
   }
 
