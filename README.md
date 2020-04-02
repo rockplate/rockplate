@@ -9,10 +9,12 @@
 
 Templating language for sensible humans
 
+![Rockplate Demo](https://raw.githubusercontent.com/rockplate/rockplate-vscode/master/images/rockplate-demo.gif)
+
 ## Quick Docs for the curious cats
 
 Full documentation with demo is on the way.
-If you've found this before announcement, you can use it in your project as it is stable.
+If you've found this before announcement, you can use it in your project as it is stable already.
 
 
 ### Installation
@@ -45,14 +47,14 @@ const output = rpl.parse({
 console.log(output); // My name is Safraz Razik
 ```
 
-### Syntax and Schema/Data structure
+## Syntax and Schema/Data structure
 
 > Limitations are good - for a templating language
 
 
-#### Booleans
+### Booleans
 
-Values: `true` `false`
+Values: `true` | `false`
 
 ```javascript
 {
@@ -68,7 +70,7 @@ Values: `true` `false`
 
 Syntax: `[if order is paid] .... [end if]`
 
-Operators: ` is ` ` are ` ` is not ` ` are not `
+Operators: ` is ` | ` are ` | ` is not ` | ` are not `
 
 
 ```pascal
@@ -88,9 +90,9 @@ vegetables 🥕🥦🍅🍆🥝🥬🥒🌶
 ```
 
 
-#### Identifers
+### Identifers
 
-Values: `string` `number` or `any` printable value
+Values: `string` | `number` or `any` printable value
 
 ```javascript
 {
@@ -106,9 +108,9 @@ Syntax: `[order ref]`
 Thank you for your order [order ref]
 ```
 
-#### Arrays
+### Arrays
 
-Value: Collection of Booleans or Identifers
+Value: Collection of `Booleans` or `Identifers`
 
 ```javascript
 {
@@ -120,7 +122,7 @@ Value: Collection of Booleans or Identifers
       },
       "discount" : {
         "available": false,
-        "amount": "5%"
+        "value": "5%"
       }
     }
   ]
@@ -138,7 +140,7 @@ Your orders:
  Status: [order status]
 
  [if discount is available]
-   Discount: [discount amount]
+   Discount: [discount value]
  [end if]
 
 [end repeat]
