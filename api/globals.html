@@ -2380,11 +2380,12 @@ img {
 				<h1>Rockplate</h1>
 			</a>
 			<p>Templating language for sensible humans</p>
+			<p><img src="https://raw.githubusercontent.com/rockplate/rockplate-vscode/master/images/rockplate-demo.gif" alt="Rockplate Demo"></p>
 			<a href="#quick-docs-for-the-curious-cats" id="quick-docs-for-the-curious-cats" style="color: inherit; text-decoration: none;">
 				<h2>Quick Docs for the curious cats</h2>
 			</a>
 			<p>Full documentation with demo is on the way.
-			If you&#39;ve found this before announcement, you can use it in your project as it is stable.</p>
+			If you&#39;ve found this before announcement, you can use it in your project as it is stable already.</p>
 			<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
 				<h3>Installation</h3>
 			</a>
@@ -2412,15 +2413,15 @@ img {
 });
 <span class="hljs-built_in">console</span>.log(output); <span class="hljs-comment">// My name is Safraz Razik</span></code></pre>
 			<a href="#syntax-and-schemadata-structure" id="syntax-and-schemadata-structure" style="color: inherit; text-decoration: none;">
-				<h3>Syntax and Schema/Data structure</h3>
+				<h2>Syntax and Schema/Data structure</h2>
 			</a>
 			<blockquote>
 				<p>Limitations are good - for a templating language</p>
 			</blockquote>
 			<a href="#booleans" id="booleans" style="color: inherit; text-decoration: none;">
-				<h4>Booleans</h4>
+				<h3>Booleans</h3>
 			</a>
-			<p>Values: <code>true</code> <code>false</code></p>
+			<p>Values: <code>true</code> | <code>false</code></p>
 			<pre><code class="language-javascript">{
   <span class="hljs-string">"order"</span> : {
     <span class="hljs-string">"paid"</span>: <span class="hljs-literal">true</span>
@@ -2431,7 +2432,7 @@ img {
 
 }</code></pre>
 			<p>Syntax: <code>[if order is paid] .... [end if]</code></p>
-			<p>Operators: <code>is</code> <code>are</code> <code>is not</code> <code>are not</code></p>
+			<p>Operators: <code>is</code> | <code>are</code> | <code>is not</code> | <code>are not</code></p>
 			<pre><code class="language-pascal">[<span class="hljs-keyword">if</span> order <span class="hljs-keyword">is</span> paid]
   Paid
 [<span class="hljs-keyword">else</span>]
@@ -2443,9 +2444,9 @@ img {
 [<span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>]
 vegetables 🥕🥦🍅🍆🥝🥬🥒🌶</code></pre>
 			<a href="#identifers" id="identifers" style="color: inherit; text-decoration: none;">
-				<h4>Identifers</h4>
+				<h3>Identifers</h3>
 			</a>
-			<p>Values: <code>string</code> <code>number</code> or <code>any</code> printable value</p>
+			<p>Values: <code>string</code> | <code>number</code> or <code>any</code> printable value</p>
 			<pre><code class="language-javascript">{
   <span class="hljs-string">"order"</span> : {
     <span class="hljs-string">"ref"</span>: <span class="hljs-string">"210045-674558-981560"</span>
@@ -2454,9 +2455,9 @@ vegetables 🥕🥦🍅🍆🥝🥬🥒🌶</code></pre>
 			<p>Syntax: <code>[order ref]</code></p>
 			<pre><code class="language-rpl">Thank you for your order [order ref]</code></pre>
 			<a href="#arrays" id="arrays" style="color: inherit; text-decoration: none;">
-				<h4>Arrays</h4>
+				<h3>Arrays</h3>
 			</a>
-			<p>Value: Collection of Booleans or Identifers</p>
+			<p>Value: Collection of <code>Booleans</code> or <code>Identifers</code></p>
 			<pre><code class="language-javascript">{
   <span class="hljs-string">"orders"</span> : [
     {
@@ -2466,7 +2467,7 @@ vegetables 🥕🥦🍅🍆🥝🥬🥒🌶</code></pre>
       },
       <span class="hljs-string">"discount"</span> : {
         <span class="hljs-string">"available"</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-string">"amount"</span>: <span class="hljs-string">"5%"</span>
+        <span class="hljs-string">"value"</span>: <span class="hljs-string">"5%"</span>
       }
     }
   ]
@@ -2480,7 +2481,7 @@ vegetables 🥕🥦🍅🍆🥝🥬🥒🌶</code></pre>
  Status: [order status]
 
  [<span class="hljs-keyword">if</span> discount <span class="hljs-keyword">is</span> available]
-   Discount: [discount amount]
+   Discount: [discount value]
  [<span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>]
 
 [<span class="hljs-keyword">end</span> <span class="hljs-keyword">repeat</span>]</code></pre>
