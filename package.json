@@ -1,6 +1,6 @@
 {
   "name": "rockplate",
-  "version": "1.0.0-pre.10",
+  "version": "1.0.0-pre.11",
   "description": "Templating language for sensible humans",
   "main": "dist/umd/rockplate.min.js",
   "module": "dist/esm/index.js",
@@ -30,6 +30,7 @@
     "@types/jest": "^25.1.2",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",
     "ts-loader": "^6.2.1",
     "tsc-watch": "^4.1.0",
