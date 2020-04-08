@@ -2375,19 +2375,13 @@ img {
 					<a href="_linter_.linter.html#builder" class="tsd-kind-icon">builder</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a href="_linter_.linter.html#lines" class="tsd-kind-icon">lines</a>
-				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a href="_linter_.linter.html#strictoverride" class="tsd-kind-icon">strict<wbr>Override</a>
-				</li>
-				<li class=" tsd-kind-property tsd-parent-kind-class">
-					<a href="_linter_.linter.html#template" class="tsd-kind-icon">template</a>
-				</li>
-				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-					<a href="_linter_.linter.html#schema" class="tsd-kind-icon">schema</a>
 				</li>
 				<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 					<a href="_linter_.linter.html#strict" class="tsd-kind-icon">strict</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="_linter_.linter.html#build" class="tsd-kind-icon">build</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a href="_linter_.linter.html#createlintresult" class="tsd-kind-icon">create<wbr>Lint<wbr>Result</a>
@@ -2461,21 +2455,19 @@ img {
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_linter_.linter.html#builder" class="tsd-kind-icon">builder</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_linter_.linter.html#lines" class="tsd-kind-icon">lines</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_linter_.linter.html#strictoverride" class="tsd-kind-icon">strict<wbr>Override</a></li>
-							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_linter_.linter.html#template" class="tsd-kind-icon">template</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
 						<h3>Accessors</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_linter_.linter.html#schema" class="tsd-kind-icon">schema</a></li>
 							<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_linter_.linter.html#strict" class="tsd-kind-icon">strict</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="_linter_.linter.html#build" class="tsd-kind-icon">build</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_linter_.linter.html#createlintresult" class="tsd-kind-icon">create<wbr>Lint<wbr>Result</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_linter_.linter.html#getblockprefix" class="tsd-kind-icon">get<wbr>Block<wbr>Prefix</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_linter_.linter.html#getparamsmergedforblock" class="tsd-kind-icon">get<wbr>Params<wbr>Merged<wbr>For<wbr>Block</a></li>
@@ -2494,22 +2486,22 @@ img {
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Linter<span class="tsd-signature-symbol">(</span>template<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, schema<span class="tsd-signature-symbol">?: </span><a href="" class="tsd-signature-type">T</a>, strictOverride<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_linter_.linter.html" class="tsd-signature-type">Linter</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Linter<span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, schemaResolver<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_builder_.html#schemaresolver" class="tsd-signature-type">SchemaResolver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, strictOverride<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_linter_.linter.html" class="tsd-signature-type">Linter</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L36">Linter.ts:36</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L35">Linter.ts:35</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>template: <span class="tsd-signature-type">string</span></h5>
+								<h5>code: <span class="tsd-signature-type">string</span></h5>
 							</li>
 							<li>
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> schema: <a href="" class="tsd-signature-type">T</a></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> schemaResolver: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_builder_.html#schemaresolver" class="tsd-signature-type">SchemaResolver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> strictOverride: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
@@ -2528,17 +2520,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">builder<span class="tsd-signature-symbol">:</span> <a href="_builder_.builder.html" class="tsd-signature-type">Builder</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L35">Linter.ts:35</a></li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-				<a name="lines" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagPrivate">Private</span> lines</h3>
-				<div class="tsd-signature tsd-kind-icon">lines<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L36">Linter.ts:36</a></li>
+						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L35">Linter.ts:35</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2548,40 +2530,13 @@ img {
 				<div class="tsd-signature tsd-kind-icon">strict<wbr>Override<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L38">Linter.ts:38</a></li>
-					</ul>
-				</aside>
-			</section>
-			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-				<a name="template" class="tsd-anchor"></a>
-				<h3>template</h3>
-				<div class="tsd-signature tsd-kind-icon">template<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-				<aside class="tsd-sources">
-					<ul>
-						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L38">Linter.ts:38</a></li>
+						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L37">Linter.ts:37</a></li>
 					</ul>
 				</aside>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Accessors</h2>
-			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-				<a name="schema" class="tsd-anchor"></a>
-				<h3>schema</h3>
-				<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> schema<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L42">Linter.ts:42</a></li>
-							</ul>
-						</aside>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span></h4>
-					</li>
-				</ul>
-			</section>
 			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 				<a name="strict" class="tsd-anchor"></a>
 				<h3>strict</h3>
@@ -2592,7 +2547,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L46">Linter.ts:46</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L45">Linter.ts:45</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -2602,6 +2557,23 @@ img {
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="build" class="tsd-anchor"></a>
+				<h3>build</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">build<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_block_block_.block.html" class="tsd-signature-type">Block</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L41">Linter.ts:41</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_block_block_.block.html" class="tsd-signature-type">Block</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 				<a name="createlintresult" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagPrivate">Private</span> create<wbr>Lint<wbr>Result</h3>
@@ -2612,7 +2584,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L62">Linter.ts:62</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L61">Linter.ts:61</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2655,7 +2627,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L53">Linter.ts:53</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L52">Linter.ts:52</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2678,7 +2650,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L58">Linter.ts:58</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L57">Linter.ts:57</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2707,7 +2679,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L266">Linter.ts:266</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L265">Linter.ts:265</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2733,7 +2705,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L257">Linter.ts:257</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L256">Linter.ts:256</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2756,7 +2728,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L167">Linter.ts:167</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L166">Linter.ts:166</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2788,7 +2760,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Linter.ts#L84">Linter.ts:84</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Linter.ts#L83">Linter.ts:83</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>

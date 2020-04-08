@@ -2375,7 +2375,13 @@ img {
 					<a href="_builder_.builder.html#builtblocks" class="tsd-kind-icon">built<wbr>Blocks</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class">
+					<a href="_builder_.builder.html#code" class="tsd-kind-icon">code</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class">
 					<a href="_builder_.builder.html#schema" class="tsd-kind-icon">schema</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a href="_builder_.builder.html#schemaresolver" class="tsd-kind-icon">schema<wbr>Resolver</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a href="_builder_.builder.html#strictoverride" class="tsd-kind-icon">strict<wbr>Override</a>
@@ -2466,6 +2472,9 @@ img {
 		<li class=" tsd-kind-interface tsd-parent-kind-external-module">
 			<a href="../interfaces/_builder_.blockdefinition.html" class="tsd-kind-icon">Block<wbr>Definition</a>
 		</li>
+		<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-has-type-parameter">
+			<a href="../modules/_builder_.html#schemaresolver" class="tsd-kind-icon">Schema<wbr>Resolver</a>
+		</li>
 	</ul>
 </nav>
 <div class="container container-main">
@@ -2500,7 +2509,9 @@ img {
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_builder_.builder.html#builtblocks" class="tsd-kind-icon">built<wbr>Blocks</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_builder_.builder.html#code" class="tsd-kind-icon">code</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_builder_.builder.html#schema" class="tsd-kind-icon">schema</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_builder_.builder.html#schemaresolver" class="tsd-kind-icon">schema<wbr>Resolver</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_builder_.builder.html#strictoverride" class="tsd-kind-icon">strict<wbr>Override</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="_builder_.builder.html#template" class="tsd-kind-icon">template</a></li>
 						</ul>
@@ -2550,22 +2561,22 @@ img {
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Builder<span class="tsd-signature-symbol">(</span>template<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, schema<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span>, strictOverride<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_builder_.builder.html" class="tsd-signature-type">Builder</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Builder<span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, schemaResolver<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_builder_.html#schemaresolver" class="tsd-signature-type">SchemaResolver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, strictOverride<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_builder_.builder.html" class="tsd-signature-type">Builder</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L12">Builder.ts:12</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L16">Builder.ts:16</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>template: <span class="tsd-signature-type">string</span></h5>
+								<h5>code: <span class="tsd-signature-type">string</span></h5>
 							</li>
 							<li>
-								<h5><span class="tsd-flag ts-flagOptional">Optional</span> schema: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span></h5>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> schemaResolver: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_builder_.html#schemaresolver" class="tsd-signature-type">SchemaResolver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 							</li>
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> strictOverride: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
@@ -2584,17 +2595,37 @@ img {
 				<div class="tsd-signature tsd-kind-icon">built<wbr>Blocks<span class="tsd-signature-symbol">:</span> <a href="_block_block_.block.html" class="tsd-signature-type">Block</a><span class="tsd-signature-symbol">[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L12">Builder.ts:12</a></li>
+						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L14">Builder.ts:14</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<a name="code" class="tsd-anchor"></a>
+				<h3>code</h3>
+				<div class="tsd-signature tsd-kind-icon">code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L19">Builder.ts:19</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 				<a name="schema" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagOptional">Optional</span> schema</h3>
-				<div class="tsd-signature tsd-kind-icon">schema<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span></div>
+				<div class="tsd-signature tsd-kind-icon">schema<span class="tsd-signature-symbol">:</span> <a href="" class="tsd-signature-type">T</a></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L16">Builder.ts:16</a></li>
+						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L16">Builder.ts:16</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+				<a name="schemaresolver" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> schema<wbr>Resolver</h3>
+				<div class="tsd-signature tsd-kind-icon">schema<wbr>Resolver<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><a href="../modules/_builder_.html#schemaresolver" class="tsd-signature-type">SchemaResolver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L20">Builder.ts:20</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2604,7 +2635,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">strict<wbr>Override<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L17">Builder.ts:17</a></li>
+						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L21">Builder.ts:21</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2614,7 +2645,7 @@ img {
 				<div class="tsd-signature tsd-kind-icon">template<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L15">Builder.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L15">Builder.ts:15</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -2631,7 +2662,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L31">Builder.ts:31</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L38">Builder.ts:38</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <a href="_block_block_.block.html" class="tsd-signature-type">Block</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -2648,7 +2679,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L20">Builder.ts:20</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L26">Builder.ts:26</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -2665,7 +2696,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L27">Builder.ts:27</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L34">Builder.ts:34</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">"strict"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"dynamic"</span></h4>
@@ -2685,7 +2716,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L477">Builder.ts:477</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L487">Builder.ts:487</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2711,7 +2742,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L39">Builder.ts:39</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L46">Builder.ts:46</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="_block_block_.block.html" class="tsd-signature-type">Block</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2728,7 +2759,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L265">Builder.ts:265</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L275">Builder.ts:275</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2754,7 +2785,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L300">Builder.ts:300</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L310">Builder.ts:310</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2783,7 +2814,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L103">Builder.ts:103</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L113">Builder.ts:113</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2809,7 +2840,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L141">Builder.ts:141</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L151">Builder.ts:151</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2835,7 +2866,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L385">Builder.ts:385</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L395">Builder.ts:395</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2882,7 +2913,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L526">Builder.ts:526</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L536">Builder.ts:536</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2905,7 +2936,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L506">Builder.ts:506</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L516">Builder.ts:516</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2931,7 +2962,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L158">Builder.ts:158</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L168">Builder.ts:168</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2954,7 +2985,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L455">Builder.ts:455</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L465">Builder.ts:465</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2980,7 +3011,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L168">Builder.ts:168</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L178">Builder.ts:178</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3009,7 +3040,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L314">Builder.ts:314</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L324">Builder.ts:324</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3032,7 +3063,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L463">Builder.ts:463</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L473">Builder.ts:473</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3070,7 +3101,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L353">Builder.ts:353</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L363">Builder.ts:363</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3102,7 +3133,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L77">Builder.ts:77</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L87">Builder.ts:87</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3131,7 +3162,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L459">Builder.ts:459</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L469">Builder.ts:469</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3163,7 +3194,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L81">Builder.ts:81</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L91">Builder.ts:91</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3186,7 +3217,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L203">Builder.ts:203</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L213">Builder.ts:213</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3218,7 +3249,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L248">Builder.ts:248</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L258">Builder.ts:258</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3250,7 +3281,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L322">Builder.ts:322</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L332">Builder.ts:332</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3273,7 +3304,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L310">Builder.ts:310</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L320">Builder.ts:320</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3299,7 +3330,7 @@ img {
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/eacc544/src/Builder.ts#L481">Builder.ts:481</a></li>
+								<li>Defined in <a href="https://github.com/rockplate/rockplate/blob/7002571/src/Builder.ts#L491">Builder.ts:491</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
