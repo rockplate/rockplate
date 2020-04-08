@@ -1,14 +1,18 @@
 import { Block, IfBlock } from './block/index';
-import { Builder } from './Builder';
+import { Builder, SchemaResolver } from './Builder';
 import { Parser } from './Parser';
 
 export class Rockplate<T = any> {
   public builder: Builder<T>;
   public parser: Parser;
 
-  public constructor(template: string, schema: T, strict?: boolean) {
-    this.builder = new Builder(template, schema, strict);
+  public constructor(template: string, schemaResolver?: T | SchemaResolver<T>, strict?: boolean) {
+    this.builder = new Builder(template, schemaResolver, strict);
     this.parser = new Parser(this.builder);
+  }
+
+  public build() {
+    return this.builder.build();
   }
 
   public parse(params: T) {
@@ -16,6 +20,7 @@ export class Rockplate<T = any> {
   }
 
   public validateTemplate() {
+    this.build();
     return this.builder.template === this.getTemplateFromBlocks(this.builder.blocks);
   }
 

@@ -1,5 +1,5 @@
 import { Block, LiteralBlock, IfBlock, RepeatBlock, CommentBlock, BlockType } from './block/index';
-import { Builder } from './Builder';
+import { Builder, SchemaResolver } from './Builder';
 import { Utils } from './Utils';
 
 type Range = {
@@ -33,14 +33,13 @@ export interface LinterResult {
 
 export class Linter<T = any> {
   public builder: Builder<T>;
-  private lines: string[] = [];
 
-  public constructor(public template: string, schema?: T, private strictOverride?: boolean) {
-    this.builder = new Builder(template, schema, false);
+  public constructor(code: string, schemaResolver?: T | SchemaResolver<T>, private strictOverride?: boolean) {
+    this.builder = new Builder(code, schemaResolver, false);
   }
 
-  public get schema() {
-    return this.builder.schema;
+  public build() {
+    return this.builder.build();
   }
 
   public get strict() {
@@ -255,7 +254,7 @@ export class Linter<T = any> {
   }
 
   private resolveLineAndColumn(res: Lint) {
-    const position = Utils.getPositionAt(this.builder.template, res.offset.begin);
+    const position = Utils.getPositionAt(this.builder.code, res.offset.begin);
     res.position.begin.line = position.line;
     res.position.begin.column = position.column;
     res.position.end.line = position.line;
@@ -264,8 +263,9 @@ export class Linter<T = any> {
   }
 
   public lint(params?: T, resolveLines = true): LinterResult {
+    this.build();
     const lints: Lint[] = [];
-    const schema = this.schema || {};
+    const schema = this.builder.schema || {};
     if (params === undefined) {
       params = schema as T;
     }

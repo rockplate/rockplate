@@ -8,19 +8,26 @@ export interface BlockDefinition {
   subkey?: string;
 }
 
+export type SchemaResolver<T> = (path: string) => T | Promise<T>;
+
 export class Builder<T> {
   private builtBlocks?: Block[];
+  public template: string;
+  public schema?: T;
 
   public constructor(
-    public template: string,
-    public schema?: T | ((path: string) => T | Promise<T>),
+    public code: string,
+    private schemaResolver?: T | SchemaResolver<T>,
     private strictOverride?: boolean,
-  ) {}
+  ) {
+    this.template = code;
+  }
 
   public get strict() {
     if (this.strictOverride !== undefined) {
       return this.strictOverride;
     }
+    const blocks = this.blocks;
     return !!this.schema;
   }
 
@@ -37,23 +44,24 @@ export class Builder<T> {
   }
 
   public build() {
-    const sch = this.getSchemaFromString(this.template);
+    const sch = this.getSchemaFromString(this.code);
     let offset = 0;
     if (sch) {
       offset = sch.offset;
+      this.template = this.code.substr(offset);
       const schema = sch.schema;
       let schemaUrl;
       const keys = Object.keys(schema);
       if (keys.length === 1 && keys[0] === 'schema') {
         schemaUrl = schema.schema;
       }
-      if (schemaUrl && this.schema instanceof Function) {
-        const schResult = this.schema(schemaUrl);
+      if (schemaUrl && this.schemaResolver instanceof Function) {
+        const schResult = this.schemaResolver(schemaUrl);
         if (schResult && (schResult as Promise<T>).then) {
           return new Promise<Block[]>((resolve, reject) => {
             (schResult as Promise<T>).then((schemaFound) => {
               this.schema = schemaFound;
-              const blocks = this.findOuterBlocks(this.template.substr(offset), this.schema);
+              const blocks = this.findOuterBlocks(this.template, this.schema);
               this.repairOffsets(blocks, offset);
               this.builtBlocks = blocks;
               resolve(blocks);
@@ -67,8 +75,10 @@ export class Builder<T> {
       } else {
         this.schema = schema;
       }
+    } else {
+      this.schema = this.schemaResolver as T;
     }
-    const outerBlocks = this.findOuterBlocks(this.template.substr(offset), this.schema);
+    const outerBlocks = this.findOuterBlocks(this.template, this.schema);
     this.repairOffsets(outerBlocks, offset);
     this.builtBlocks = outerBlocks;
     return Promise.resolve(outerBlocks);
