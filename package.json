@@ -18,7 +18,7 @@
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:umd": "webpack --env=production",
-    "build:docs": "typedoc --out docs/api --target es6 --theme minimal --exclude '**/*.spec.ts' src",
+    "build:docs": "typedoc --readme docs/README.md --out docs/api --target es6 --theme minimal --exclude '**/*.spec.ts' src",
     "watch": "webpack --env=development",
     "test": "jest --coverage",
     "test:watch": "jest --watch --coverage",
