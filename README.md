@@ -11,4 +11,4 @@ API docs for Rockplate - Templating language for sensible humans
 
 ### [Documentation](https://rockplate.github.io/)
 
-## [GitHub](https://github.com/rockplate/rockplate)
+### [GitHub](https://github.com/rockplate/rockplate)
