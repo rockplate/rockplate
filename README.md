@@ -11,38 +11,36 @@ Templating language for sensible humans
 
 ![Rockplate Demo](https://raw.githubusercontent.com/rockplate/rockplate-vscode/master/images/rockplate-demo.gif)
 
+## [Documentation and Demo](https://rockplate.github.io/)
+
+[Click here](https://rockplate.github.io/) for full documentation with demo and examples.
+
 ## Quick Docs for the curious cats
-
-Full documentation with demo is on the way.
-If you've found this before announcement, you can use it in your project as it is stable already.
-
 
 ### Installation
 
 `npm install rockplate`
-
 
 ### Usage
 
 TypeScript/JavaScript
 
 ```javascript
-
 import { Rockplate } from 'rockplate';
 
 const template = 'My name is [my name]';
 const schema = {
-  "my": {
-    "name": "My Name"
-  }
+  my: {
+    name: 'My Name',
+  },
 };
 const rpl = new Rockplate(template, schema);
 const output = rpl.parse({
   // you will get type hints
   // for properties in schema as you type
   my: {
-    name: 'Safraz Razik'
-  }
+    name: 'Safraz Razik',
+  },
 });
 console.log(output); // My name is Safraz Razik
 ```
@@ -50,7 +48,6 @@ console.log(output); // My name is Safraz Razik
 ## Syntax and Schema/Data structure
 
 > Limitations are good - for a templating language
-
 
 ### Booleans
 
@@ -70,8 +67,7 @@ Values: `true` | `false`
 
 Syntax: `[if order is paid] .... [end if]`
 
-Operators: ` is ` | ` are ` | ` is not ` | ` are not `
-
+Operators: `is` | `are` | `is not` | `are not`
 
 ```pascal
 [if order is paid]
@@ -88,7 +84,6 @@ I eat
 [end if]
 vegetables 🥕🥦🍅🍆🥝🥬🥒🌶
 ```
-
 
 ### Identifers
 
