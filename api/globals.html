@@ -2379,114 +2379,13 @@ img {
 			<a href="#rockplate" id="rockplate" style="color: inherit; text-decoration: none;">
 				<h1>Rockplate</h1>
 			</a>
-			<p>Templating language for sensible humans</p>
-			<p><img src="https://raw.githubusercontent.com/rockplate/rockplate-vscode/master/images/rockplate-demo.gif" alt="Rockplate Demo"></p>
-			<a href="#quick-docs-for-the-curious-cats" id="quick-docs-for-the-curious-cats" style="color: inherit; text-decoration: none;">
-				<h2>Quick Docs for the curious cats</h2>
+			<p>API docs for Rockplate - Templating language for sensible humans</p>
+			<a href="#a-hrefhttpsrockplategithubiodocumentationa" id="a-hrefhttpsrockplategithubiodocumentationa" style="color: inherit; text-decoration: none;">
+				<h3><a href="https://rockplate.github.io/">Documentation</a></h3>
 			</a>
-			<p>Full documentation with demo is on the way.
-			If you&#39;ve found this before announcement, you can use it in your project as it is stable already.</p>
-			<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
-				<h3>Installation</h3>
+			<a href="#a-hrefhttpsgithubcomrockplaterockplategithuba" id="a-hrefhttpsgithubcomrockplaterockplategithuba" style="color: inherit; text-decoration: none;">
+				<h2><a href="https://github.com/rockplate/rockplate">GitHub</a></h2>
 			</a>
-			<p><code>npm install rockplate</code></p>
-			<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-				<h3>Usage</h3>
-			</a>
-			<p>TypeScript/JavaScript</p>
-			<pre><code class="language-javascript">
-<span class="hljs-keyword">import</span> { Rockplate } <span class="hljs-keyword">from</span> <span class="hljs-string">'rockplate'</span>;
-
-<span class="hljs-keyword">const</span> template = <span class="hljs-string">'My name is [my name]'</span>;
-<span class="hljs-keyword">const</span> schema = {
-  <span class="hljs-string">"my"</span>: {
-    <span class="hljs-string">"name"</span>: <span class="hljs-string">"My Name"</span>
-  }
-};
-<span class="hljs-keyword">const</span> rpl = <span class="hljs-keyword">new</span> Rockplate(template, schema);
-<span class="hljs-keyword">const</span> output = rpl.parse({
-  <span class="hljs-comment">// you will get type hints</span>
-  <span class="hljs-comment">// for properties in schema as you type</span>
-  <span class="hljs-attr">my</span>: {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">'Safraz Razik'</span>
-  }
-});
-<span class="hljs-built_in">console</span>.log(output); <span class="hljs-comment">// My name is Safraz Razik</span></code></pre>
-			<a href="#syntax-and-schemadata-structure" id="syntax-and-schemadata-structure" style="color: inherit; text-decoration: none;">
-				<h2>Syntax and Schema/Data structure</h2>
-			</a>
-			<blockquote>
-				<p>Limitations are good - for a templating language</p>
-			</blockquote>
-			<a href="#booleans" id="booleans" style="color: inherit; text-decoration: none;">
-				<h3>Booleans</h3>
-			</a>
-			<p>Values: <code>true</code> | <code>false</code></p>
-			<pre><code class="language-javascript">{
-  <span class="hljs-string">"order"</span> : {
-    <span class="hljs-string">"paid"</span>: <span class="hljs-literal">true</span>
-  },
-  <span class="hljs-string">"vegetables"</span>: {
-    <span class="hljs-string">"fresh"</span>: <span class="hljs-literal">true</span> <span class="hljs-comment">// example for " are " operator</span>
-  }
-
-}</code></pre>
-			<p>Syntax: <code>[if order is paid] .... [end if]</code></p>
-			<p>Operators: <code>is</code> | <code>are</code> | <code>is not</code> | <code>are not</code></p>
-			<pre><code class="language-pascal">[<span class="hljs-keyword">if</span> order <span class="hljs-keyword">is</span> paid]
-  Paid
-[<span class="hljs-keyword">else</span>]
-  Unpaid
-[<span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>]</code></pre>
-			<pre><code class="language-pascal">I eat
-[<span class="hljs-keyword">if</span> vegetables are fresh]
-  healthy
-[<span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>]
-vegetables 🥕🥦🍅🍆🥝🥬🥒🌶</code></pre>
-			<a href="#identifers" id="identifers" style="color: inherit; text-decoration: none;">
-				<h3>Identifers</h3>
-			</a>
-			<p>Values: <code>string</code> | <code>number</code> or <code>any</code> printable value</p>
-			<pre><code class="language-javascript">{
-  <span class="hljs-string">"order"</span> : {
-    <span class="hljs-string">"ref"</span>: <span class="hljs-string">"210045-674558-981560"</span>
-  }
-}</code></pre>
-			<p>Syntax: <code>[order ref]</code></p>
-			<pre><code class="language-rpl">Thank you for your order [order ref]</code></pre>
-			<a href="#arrays" id="arrays" style="color: inherit; text-decoration: none;">
-				<h3>Arrays</h3>
-			</a>
-			<p>Value: Collection of <code>Booleans</code> or <code>Identifers</code></p>
-			<pre><code class="language-javascript">{
-  <span class="hljs-string">"orders"</span> : [
-    {
-      <span class="hljs-string">"order"</span> : {
-        <span class="hljs-string">"status"</span>: <span class="hljs-string">"Paid"</span>,
-        <span class="hljs-string">"ref"</span>: <span class="hljs-string">"210045-674558-981560"</span>
-      },
-      <span class="hljs-string">"discount"</span> : {
-        <span class="hljs-string">"available"</span>: <span class="hljs-literal">false</span>,
-        <span class="hljs-string">"amount"</span>: <span class="hljs-string">"5%"</span>
-      }
-    }
-  ]
-}</code></pre>
-			<p>Syntax: <code>[repeat orders] .... [end repeat]</code></p>
-			<pre><code class="language-pascal">Your orders:
-[<span class="hljs-keyword">repeat</span> orders]
-
- Ref: [order ref]
-
- Status: [order status]
-
- [<span class="hljs-keyword">if</span> discount <span class="hljs-keyword">is</span> available]
-   Discount: [discount amount]
- [<span class="hljs-keyword">end</span> <span class="hljs-keyword">if</span>]
-
-[<span class="hljs-keyword">end</span> <span class="hljs-keyword">repeat</span>]</code></pre>
-			<!-- NOTE: pascal has nothing to do with rockplate.
-Keywords of rockplate are keywords of pascal, so it has been used for syntax highlighting -->
 		</div>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
