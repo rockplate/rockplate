@@ -1,6 +1,6 @@
 {
   "name": "rockplate",
-  "version": "1.0.0-pre.13",
+  "version": "1.0.0-pre.14",
   "description": "Templating language for sensible humans",
   "main": "dist/umd/rockplate.min.js",
   "module": "dist/esm/index.js",
@@ -26,18 +26,27 @@
   },
   "author": "Safraz Razik",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rockplate/rockplate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rockplate/rockplate/issues"
+  },
+  "homepage": "https://rockplate.github.io",
+  "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^25.1.2",
-    "jest": "^25.1.0",
-    "prettier": "^1.19.1",
+    "@types/jest": "^25.2.1",
+    "jest": "^25.4.0",
+    "prettier": "^2.0.4",
     "rimraf": "^3.0.2",
-    "ts-jest": "^25.2.1",
-    "ts-loader": "^6.2.1",
-    "tsc-watch": "^4.1.0",
-    "tslint": "^6.0.0",
-    "typedoc": "^0.16.10",
-    "typescript": "^3.7.5",
-    "webpack": "^4.42.0",
+    "ts-jest": "^25.4.0",
+    "ts-loader": "^7.0.1",
+    "tsc-watch": "^4.2.3",
+    "tslint": "^6.1.1",
+    "typedoc": "^0.17.4",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"
   }
 }
