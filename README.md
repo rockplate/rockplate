@@ -16,8 +16,8 @@ Templating language for sensible humans
 
 - Data First approach with Schema validation
 - Semantic, Natural Syntax with Flawless Lexical Scoping
-- Built in [Linter](/linter)
-- Official [Tools](/tools)
+- Built in [Linter](https://rockplate.github.io/linter)
+- Official [Tools](https://rockplate.github.io/tools)
 - Battle-tested with 🔥 **100%** code coverage
 - Written in TypeScript, no dependencies, `5kb` minified, gzipped
 - Zero RegEx lexer/AST builder (High performance and high security)
