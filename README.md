@@ -11,6 +11,18 @@ Templating language for sensible humans
 
 ![Rockplate Demo](https://raw.githubusercontent.com/rockplate/rockplate-vscode/master/images/rockplate-demo.gif)
 
+
+## Features
+
+- Data First approach with Schema validation
+- Semantic, Natural Syntax with Flawless Lexical Scoping
+- Built in [Linter](/linter)
+- Official [Tools](/tools)
+- Battle-tested with 🔥 **100%** code coverage
+- Written in TypeScript, no dependencies, `5kb` minified, gzipped
+- Zero RegEx lexer/AST builder (High performance and high security)
+- Can be used for Email, SMS, Receipt, Invoice, HTML and other templates
+
 ## [Documentation and Demo](https://rockplate.github.io/)
 
 [Click here](https://rockplate.github.io/) for full documentation with demo and examples.
