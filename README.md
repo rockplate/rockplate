@@ -7,7 +7,7 @@
 
 # Rockplate
 
-Templating language for sensible humans
+Next generation programming language for Email, SMS, Receipt, Invoice, HTML and other templates with built in Linter, official CodeMirror & VSCode IntelliSense extension, no dependencies, 5kb minified & gzipped, 100% code coverage.
 
 ![Rockplate Demo](https://raw.githubusercontent.com/rockplate/rockplate-vscode/master/images/rockplate-demo.gif)
 
