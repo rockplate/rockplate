@@ -5,7 +5,7 @@
 [![devDependencies Status](https://david-dm.org/rockplate/rockplate/dev-status.svg)](https://david-dm.org/rockplate/rockplate?type=dev)
 <!-- [![HitCount](https://hits.dwyl.com/rockplate/rockplate.svg)](https://hits.dwyl.com/rockplate/rockplate) -->
 
-# Rockplate
+# [🤘] Rockplate
 
 Next generation programming language for Email, SMS, Receipt, Invoice, HTML and other templates with built in Linter, official CodeMirror & VSCode IntelliSense extension, no dependencies, 5kb minified & gzipped, 100% code coverage.
 
