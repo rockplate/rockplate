@@ -27,7 +27,7 @@ Next generation programming language for Email, SMS, Receipt, Invoice, HTML and 
 
 [Click here](https://rockplate.github.io/) for full documentation with demo and examples.
 
-## Quick Docs for the curious cats
+## Quick Docs
 
 ### Installation
 
